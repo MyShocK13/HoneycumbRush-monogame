@@ -1,5 +1,7 @@
 ﻿using HoneycombRush;
 using Microsoft.Xna.Framework;
+using System;
+using System.Diagnostics;
 
 namespace HoneycumbRush;
 
@@ -29,6 +31,10 @@ class MainMenuScreen : MenuScreen
             3 * quarterViewportWidth - ScreenManager.ButtonBackground.Width / 2,
             menuEntryHeight);
 
+        // Hook up menu event handlers.
+        startGameMenuEntry.Selected += StartGameMenuEntrySelected;
+        exitMenuEntry.Selected += OnCancel;
+
         // Add entries to the menu.
         MenuEntries.Add(startGameMenuEntry);
         MenuEntries.Add(exitMenuEntry);
@@ -41,5 +47,13 @@ class MainMenuScreen : MenuScreen
         base.Update(gameTime);
     }
 
+    void StartGameMenuEntrySelected(object sender, EventArgs e)
+    {
+        Debug.WriteLine("StartGameMenuEntrySelected");
+    }
 
+    protected override void OnCancel(PlayerIndex playerIndex)
+    {
+        Debug.WriteLine("OnCancel");
+    }
 }

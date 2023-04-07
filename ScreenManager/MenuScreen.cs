@@ -1,8 +1,10 @@
 ﻿using HoneycombRush;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace HoneycumbRush;
 
@@ -21,6 +23,62 @@ abstract class MenuScreen : GameScreen
     public MenuScreen(string menuTitle)
     {
         _menuTitle = menuTitle;
+    }
+
+    protected virtual Rectangle GetMenuEntryHitBounds(MenuEntry entry)
+    {
+        return entry.Bounds;
+    }
+
+    public override void HandleInput(GameTime gameTime, InputState input)
+    {
+        // we cancel the current menu screen if the user presses the back button
+        PlayerIndex player;
+        if (input.IsNewButtonPress(Buttons.Back, ControllingPlayer, out player))
+        {
+            OnCancel(player);
+        }
+
+        // Take care of Keyboard input
+        if (input.IsMenuUp(ControllingPlayer))
+        {
+            _selectedEntry--;
+
+            if (_selectedEntry < 0)
+            {
+                _selectedEntry = _menuEntries.Count - 1;
+            }
+        }
+        else if (input.IsMenuDown(ControllingPlayer))
+        {
+            _selectedEntry++;
+
+            if (_selectedEntry >= _menuEntries.Count)
+            {
+                _selectedEntry = 0;
+            }
+        }
+        else if (input.IsNewKeyPress(Keys.Enter, ControllingPlayer, out player) ||
+                 input.IsNewKeyPress(Keys.Space, ControllingPlayer, out player) ||
+                 input.IsNewMouseClick(InputState.MouseButton.Left, ControllingPlayer, out player))
+        {
+            OnSelectEntry(_selectedEntry, player);
+        }
+    }
+
+    protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
+    {
+        _menuEntries[entryIndex].OnSelectEntry(playerIndex);
+    }
+
+    protected virtual void OnCancel(PlayerIndex playerIndex)
+    {
+        Debug.WriteLine("OnCancel");
+    }
+
+    protected void OnCancel(object sender, PlayerIndexEventArgs e)
+    {
+        OnCancel(e.PlayerIndex);
     }
 
     public override void Update(GameTime gameTime)

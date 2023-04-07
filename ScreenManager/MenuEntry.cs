@@ -35,13 +35,15 @@ class MenuEntry
     public float Scale { get; set; }
     public float Rotation { get; set; }
 
-    //public event EventHandler<PlayerIndexEventArgs> Selected;
+    public event EventHandler<PlayerIndexEventArgs> Selected;
 
-    //protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
-    //{
-    //    if (Selected != null)
-    //        Selected(this, new PlayerIndexEventArgs(playerIndex));
-    //}
+    protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
+    {
+        if (Selected != null)
+        {
+            Selected(this, new PlayerIndexEventArgs(playerIndex));
+        }
+    }
 
     public MenuEntry(string text)
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HoneycombRush;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -11,6 +12,7 @@ public class ScreenManager : DrawableGameComponent
     private List<GameScreen> _screens = new List<GameScreen>();
     private List<GameScreen> _screensToUpdate = new List<GameScreen>();
 
+    private InputState _input = new InputState();
     private SpriteBatch _spriteBatch;
     private SpriteFont _font;
     private Texture2D _blankTexture;
@@ -75,7 +77,8 @@ public class ScreenManager : DrawableGameComponent
 
     public override void Update(GameTime gameTime)
     {
-
+        // Read the keyboard and gamepad.
+        _input.Update();
 
         // Make a copy of the master screen list, to avoid confusion if
         // the process of updating one screen adds or removes others.
@@ -89,10 +92,15 @@ public class ScreenManager : DrawableGameComponent
         // Loop as long as there are screens waiting to be updated.
         while (_screensToUpdate.Count > 0)
         {
+            // Pop the topmost screen off the waiting list.
             GameScreen screen = _screensToUpdate[_screensToUpdate.Count - 1];
             _screensToUpdate.RemoveAt(_screensToUpdate.Count - 1);
 
+            // Update the screen.
             screen.Update(gameTime);
+
+            // Handling input
+            screen.HandleInput(gameTime, _input);
         }
     }
 

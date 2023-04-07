@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HoneycombRush;
+using Microsoft.Xna.Framework;
 
 namespace HoneycumbRush;
 
@@ -32,21 +33,27 @@ public abstract class GameScreen
         }
     }
 
+    private ScreenManager _screenManager;
     public ScreenManager ScreenManager
     {
         get { return _screenManager; }
         internal set { _screenManager = value; }
     }
 
-    private ScreenManager _screenManager;
+    private PlayerIndex? _controllingPlayer;
+    public PlayerIndex? ControllingPlayer
+    {
+        get { return _controllingPlayer; }
+        internal set { _controllingPlayer = value; }
+    }
 
     public virtual void LoadContent() { }
 
     public virtual void UnloadContent() { }
 
-    public virtual void Update(GameTime gameTime) 
-    { 
-    }
+    public virtual void Update(GameTime gameTime) { }
+
+    public virtual void HandleInput(GameTime gameTime, InputState input) { }
 
     public virtual void Draw(GameTime gameTime) { }
 

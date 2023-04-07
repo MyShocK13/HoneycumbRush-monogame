@@ -7,6 +7,8 @@ namespace HoneycumbRush;
 
 class MainMenuScreen : MenuScreen
 {
+    private bool _isExiting = false;
+
     public MainMenuScreen()
             : base("")
     {
@@ -42,9 +44,15 @@ class MainMenuScreen : MenuScreen
         base.LoadContent();
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
     {
-        base.Update(gameTime);
+        if (_isExiting)
+        {
+            _isExiting = false;
+            ScreenManager.Game.Exit();
+        }
+
+        base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
     }
 
     void StartGameMenuEntrySelected(object sender, EventArgs e)

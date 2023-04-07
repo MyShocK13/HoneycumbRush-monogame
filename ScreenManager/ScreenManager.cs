@@ -35,11 +35,6 @@ public class ScreenManager : DrawableGameComponent
         get { return _buttonBackground; }
     }
 
-    //public ContentManager Content
-    //{
-    //    get { return _content; }
-    //}
-
     public ScreenManager(Game game) : base(game)
     {
     }
@@ -52,11 +47,10 @@ public class ScreenManager : DrawableGameComponent
 
     protected override void LoadContent()
     {
-        //_content = Game.Content;
-
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         Game.Services.AddService(typeof(SpriteBatch), _spriteBatch);
 
+        // Load content belonging to the screen manager.
         _font = Game.Content.Load<SpriteFont>("Fonts/MenuFont");
         _blankTexture = Game.Content.Load<Texture2D>("Textures/Backgrounds/blank");
         _buttonBackground = Game.Content.Load<Texture2D>("Textures/Backgrounds/buttonBackground");
@@ -89,6 +83,9 @@ public class ScreenManager : DrawableGameComponent
             _screensToUpdate.Add(screen);
         }
 
+        bool otherScreenHasFocus = !Game.IsActive;
+        bool coveredByOtherScreen = false;
+
         // Loop as long as there are screens waiting to be updated.
         while (_screensToUpdate.Count > 0)
         {
@@ -97,10 +94,27 @@ public class ScreenManager : DrawableGameComponent
             _screensToUpdate.RemoveAt(_screensToUpdate.Count - 1);
 
             // Update the screen.
-            screen.Update(gameTime);
+            screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            // Handling input
-            screen.HandleInput(gameTime, _input);
+            if (screen.ScreenState == ScreenState.TransitionOn ||
+                screen.ScreenState == ScreenState.Active)
+            {
+                // If this is the first active screen we came across,
+                // give it a chance to handle input.
+                if (!otherScreenHasFocus)
+                {
+                    screen.HandleInput(gameTime, _input);
+
+                    otherScreenHasFocus = true;
+                }
+
+                // If this is an active non-popup, inform any subsequent
+                // screens that they are covered by it.
+                if (!screen.IsPopup)
+                {
+                    coveredByOtherScreen = true;
+                }
+            }
         }
     }
 
@@ -108,19 +122,39 @@ public class ScreenManager : DrawableGameComponent
     {
         foreach (GameScreen screen in _screens)
         {
+            if (screen.ScreenState == ScreenState.Hidden)
+            {
+                continue;
+            }
+
             screen.Draw(gameTime);
         }
     }
 
-    public void AddScreen(GameScreen screen)
+    public void AddScreen(GameScreen screen, PlayerIndex? controllingPlayer)
     {
+        screen.ControllingPlayer = controllingPlayer;
         screen.ScreenManager = this;
+        screen.IsExiting = false;
 
+        // If we have a graphics device, tell the screen to load content.
         if (_isInitialized)
         {
             screen.LoadContent();
         }
 
         _screens.Add(screen);
+    }
+
+    public void RemoveScreen(GameScreen screen)
+    {
+        // If we have a graphics device, tell the screen to unload content.
+        if (_isInitialized)
+        {
+            screen.UnloadContent();
+        }
+
+        _screens.Remove(screen);
+        _screensToUpdate.Remove(screen);
     }
 }

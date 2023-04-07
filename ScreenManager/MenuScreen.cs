@@ -81,9 +81,9 @@ abstract class MenuScreen : GameScreen
         OnCancel(e.PlayerIndex);
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
     {
-        base.Update(gameTime);
+        base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
         // Update each nested MenuEntry object.
         for (int i = 0; i < _menuEntries.Count; i++)

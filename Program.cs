@@ -1,3 +1,3 @@
 ﻿
-using var game = new HoneycumbRush.Game1();
+using var game = new HoneycumbRush.HoneycumbRush();
 game.Run();

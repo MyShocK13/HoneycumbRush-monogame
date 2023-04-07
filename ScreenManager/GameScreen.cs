@@ -4,6 +4,34 @@ namespace HoneycumbRush;
 
 public abstract class GameScreen
 {
+    private float _transitionPosition = 1;
+    public float TransitionPosition
+    {
+        get { return _transitionPosition; }
+        protected set { _transitionPosition = value; }
+    }
+
+    public float TransitionAlpha
+    {
+        get { return 1f - TransitionPosition; }
+    }
+
+    private ScreenState _screenState = ScreenState.TransitionOn;
+    public ScreenState ScreenState
+    {
+        get { return _screenState; }
+        protected set { _screenState = value; }
+    }
+
+    private bool _otherScreenHasFocus;
+    public bool IsActive
+    {
+        get
+        {
+            return !_otherScreenHasFocus && (_screenState == ScreenState.Active);
+        }
+    }
+
     public ScreenManager ScreenManager
     {
         get { return _screenManager; }

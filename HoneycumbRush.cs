@@ -20,6 +20,7 @@ public class HoneycumbRush : Game
 
         _screenManager = new ScreenManager(this);
         _screenManager.AddScreen(new BackgroundScreen("titleScreen"));
+        _screenManager.AddScreen(new MainMenuScreen());
         Components.Add(_screenManager);
     }
 

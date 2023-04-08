@@ -24,6 +24,7 @@ class LoadingAndInstructionScreen : GameScreen
     {
         // Create a new instance of the gameplay screen
         _gameplayScreen = new GameplayScreen(DifficultyMode.Easy);
+        _gameplayScreen.ScreenManager = ScreenManager;
     }
 
     public override void HandleInput(GameTime gameTime, InputState input)

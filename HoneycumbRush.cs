@@ -19,6 +19,7 @@ public class HoneycumbRush : Game
         IsMouseVisible = true;
 
         _screenManager = new ScreenManager(this);
+
         _screenManager.AddScreen(new BackgroundScreen("titleScreen"), null);
         _screenManager.AddScreen(new MainMenuScreen(), PlayerIndex.One);
         Components.Add(_screenManager);

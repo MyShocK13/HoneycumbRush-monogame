@@ -22,10 +22,10 @@ static class UIConstants
         //            HoneyJarTopMargin = 12 * scaleVector.Y;
         //            HoneyJarLeftMargin = 30 * scaleVector.Y;
 
-        //            VatArrowOffset = -35 * scaleVector.Y;
-        //            VatBottomMargin = 50 * scaleVector.Y;
-        //            VatScorebarHeight = (int)(20 * scaleVector.Y);
-        //            VatScorebarWidth = (int)(210 * scaleVector.X);
+        VatArrowOffset = -35 * scaleVector.Y;
+        VatBottomMargin = 50 * scaleVector.Y;
+        VatScorebarHeight = (int)(20 * scaleVector.Y);
+        VatScorebarWidth = (int)(210 * scaleVector.X);
 
         SmokeButtonSize = 137;
         SmokeButtonRightAbsoluteMargin = 170 * scaleVector.X;
@@ -56,10 +56,10 @@ static class UIConstants
     //        public static float HoneyJarTopMargin { get; private set; }
     //        public static float HoneyJarLeftMargin { get; private set; }
 
-    //        public static float VatArrowOffset { get; private set; }
-    //        public static float VatBottomMargin { get; private set; }
-    //        public static int VatScorebarHeight { get; private set; }
-    //        public static int VatScorebarWidth { get; private set; }
+    public static float VatArrowOffset { get; private set; }
+    public static float VatBottomMargin { get; private set; }
+    public static int VatScorebarHeight { get; private set; }
+    public static int VatScorebarWidth { get; private set; }
 
     /// <summary>
     /// Sets the size of the smoke button. This does not take the scale factor into account.

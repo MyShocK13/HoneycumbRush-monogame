@@ -25,11 +25,16 @@ public class GameplayScreen : GameScreen
     private Texture2D _smokeButton;
     private Vector2 _smokeButtonPosition;
     private Vector2 _smokeTextLocation;
+    private Vector2 _vatArrowPosition;
 
     private DifficultyMode _gameDifficultyLevel;
+    private Vat _vat;
 
     private bool _isAtStartupCountDown;
     private bool _levelEnded;
+    private bool _drawArrow;
+    private bool _drawArrowInInterval;
+    private int _arrowCounter;
     private TimeSpan _startScreenTime;
 
 
@@ -42,11 +47,8 @@ public class GameplayScreen : GameScreen
     //        /// A vector describing the movement direction according to the current user input.
     //        /// </summary>
     //        Vector2 movementVector;
-    //        Vector2 vatArrowPosition;
 
     //        bool isSmokebuttonClicked;
-    //        bool drawArrow;
-    //        bool drawArrowInInterval;
     //        bool isInMotion;
     //        bool isLevelEnd;
     //        bool isUserWon;
@@ -55,7 +57,6 @@ public class GameplayScreen : GameScreen
 
     //        int amountOfSoldierBee;
     //        int amountOfWorkerBee;
-    //        int arrowCounter;
 
     //        List<Beehive> beehives = new List<Beehive>();
     //        List<Bee> bees = new List<Bee>();
@@ -65,7 +66,6 @@ public class GameplayScreen : GameScreen
 
     //        BeeKeeper beeKeeper;
     //        HoneyJar jar;
-    //        Vat vat;
 
 
     public bool IsStarted
@@ -376,7 +376,7 @@ public class GameplayScreen : GameScreen
 
             spriteBatch.DrawString(_font16px, SmokeText, _smokeTextLocation, Color.White);
 
-            //                DrawVatHoneyArrow();
+            DrawVatHoneyArrow();
         }
 
         //            DrawLevelEndIfNecessary();
@@ -590,28 +590,28 @@ public class GameplayScreen : GameScreen
         //                        (int)controlstickBoundaryPosition.Y, controlstickBoundary.Width, controlstickBoundary.Height);
         //            ScreenManager.Game.Components.Add(beeKeeper);
 
-        //            // Creates the vat
-        //            Texture2D vatTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/vat");
+        // Creates the vat
+        Texture2D vatTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/vat");
 
-        //            Vector2 vatLocation = new Vector2(safeArea.Center.X - vatTexture.Width * scaleVector.X / 2,
-        //                safeArea.Bottom - vatTexture.Height * scaleVector.Y - UIConstants.VatBottomMargin);
-        //            Vector2 vatScorebarLocation = vatLocation +
-        //                new Vector2((vatTexture.Width * scaleVector.X - UIConstants.VatScorebarWidth) / 2,
-        //            vatTexture.Height * scaleVector.Y * 7 / 10);
+        Vector2 vatLocation = new Vector2(
+            safeArea.Center.X - vatTexture.Width / 2,
+            safeArea.Bottom - vatTexture.Height - UIConstants.VatBottomMargin);
+        Vector2 vatScorebarLocation = vatLocation + new Vector2(
+            (vatTexture.Width - UIConstants.VatScorebarWidth) / 2,
+            vatTexture.Height * 7 / 10);
 
-        //            scoreBar = new ScoreBar(ScreenManager.Game, 0, 300, vatScorebarLocation, UIConstants.VatScorebarHeight,
-        //                UIConstants.VatScorebarWidth, Color.White, ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
+        ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 300, vatScorebarLocation, UIConstants.VatScorebarHeight,
+                UIConstants.VatScorebarWidth, Color.White, ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
 
-        //            vat = new Vat(ScreenManager.Game, this, vatTexture, vatLocation, scoreBar);
-        //            ScreenManager.Game.Components.Add(vat);
+        _vat = new Vat(ScreenManager.Game, this, vatTexture, vatLocation, scoreBar);
+        ScreenManager.Game.Components.Add(_vat);
 
-        //            vatArrowPosition =
-        //                vatLocation + new Vector2(vatTexture.Width * scaleVector.X / 2 -
-        //                    arrowTexture.Width * scaleVector.X / 2, UIConstants.VatArrowOffset);
+        _vatArrowPosition = vatLocation + new Vector2(
+            vatTexture.Width / 2 - _arrowTexture.Width / 2,
+            UIConstants.VatArrowOffset);
 
-        //            ScreenManager.Game.Components.Add(scoreBar);
-
-        //            scoreBar.DrawOrder = vat.DrawOrder + 1;
+        ScreenManager.Game.Components.Add(scoreBar);
+        scoreBar.DrawOrder = _vat.DrawOrder + 1;
     }
 
     //        /// <summary>
@@ -1112,33 +1112,33 @@ public class GameplayScreen : GameScreen
     //            return false;
     //        }
 
-    //        /// <summary>
-    //        /// Draws the arrow in intervals of 20 game update loops.        
-    //        /// </summary>
-    //        private void DrawVatHoneyArrow()
-    //        {
-    //            // If the arrow needs to be drawn, and it is not invisible during the current interval
-    //            if (drawArrow && drawArrowInInterval)
-    //            {
-    //                ScreenManager.SpriteBatch.Draw(arrowTexture, vatArrowPosition, Color.White);
+    /// <summary>
+    /// Draws the arrow in intervals of 20 game update loops.        
+    /// </summary>
+    private void DrawVatHoneyArrow()
+    {
+        // If the arrow needs to be drawn, and it is not invisible during the current interval
+        if (_drawArrow && _drawArrowInInterval)
+        {
+            ScreenManager.SpriteBatch.Draw(_arrowTexture, _vatArrowPosition, Color.White);
 
-    //                if (arrowCounter == 20)
-    //                {
-    //                    drawArrowInInterval = false;
-    //                    arrowCounter = 0;
-    //                }
-    //                arrowCounter++;
-    //            }
-    //            else
-    //            {
-    //                if (arrowCounter == 20)
-    //                {
-    //                    drawArrowInInterval = true;
-    //                    arrowCounter = 0;
-    //                }
-    //                arrowCounter++;
-    //            }
-    //        }
+            if (_arrowCounter == 20)
+            {
+                _drawArrowInInterval = false;
+                _arrowCounter = 0;
+            }
+            _arrowCounter++;
+        }
+        else
+        {
+            if (_arrowCounter == 20)
+            {
+                _drawArrowInInterval = true;
+                _arrowCounter = 0;
+            }
+            _arrowCounter++;
+        }
+    }
 
     /// <summary>
     /// Draws the smoke button.

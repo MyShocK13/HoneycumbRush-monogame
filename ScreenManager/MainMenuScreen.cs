@@ -23,8 +23,7 @@ class MainMenuScreen : MenuScreen
         // Calculate menu positions - we do this here since we want the screen
         // manager to be available
         int quarterViewportWidth = ScreenManager.GraphicsDevice.Viewport.Width / 4;
-        //int menuEntryHeight = SafeArea.Bottom - ScreenManager.ButtonBackground.Height * 2;
-        int menuEntryHeight = ScreenManager.ButtonBackground.Height * 2;
+        int menuEntryHeight = SafeArea.Bottom - ScreenManager.ButtonBackground.Height * 2;
 
         startGameMenuEntry.Position = new Vector2(
             quarterViewportWidth - ScreenManager.ButtonBackground.Width / 2,
@@ -62,6 +61,6 @@ class MainMenuScreen : MenuScreen
 
     protected override void OnCancel(PlayerIndex playerIndex)
     {
-        Debug.WriteLine("OnCancel");
+        _isExiting = true;
     }
 }

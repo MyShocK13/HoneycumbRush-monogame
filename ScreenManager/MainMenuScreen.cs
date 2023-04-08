@@ -1,7 +1,6 @@
 ﻿using HoneycombRush;
 using Microsoft.Xna.Framework;
 using System;
-using System.Diagnostics;
 
 namespace HoneycumbRush;
 
@@ -56,7 +55,13 @@ class MainMenuScreen : MenuScreen
 
     void StartGameMenuEntrySelected(object sender, EventArgs e)
     {
-        Debug.WriteLine("StartGameMenuEntrySelected");
+        foreach (GameScreen screen in ScreenManager.GetScreens())
+        {
+            screen.ExitScreen();
+        }
+
+        ScreenManager.AddScreen(new BackgroundScreen("InstructionsPC"), null);
+        ScreenManager.AddScreen(new LoadingAndInstructionScreen(), null);
     }
 
     protected override void OnCancel(PlayerIndex playerIndex)

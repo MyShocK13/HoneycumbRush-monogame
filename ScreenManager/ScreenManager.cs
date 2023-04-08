@@ -1,8 +1,6 @@
 ﻿using HoneycombRush;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
 using System.Collections.Generic;
 
 namespace HoneycumbRush;
@@ -156,5 +154,10 @@ public class ScreenManager : DrawableGameComponent
 
         _screens.Remove(screen);
         _screensToUpdate.Remove(screen);
+    }
+
+    public GameScreen[] GetScreens()
+    {
+        return _screens.ToArray();
     }
 }

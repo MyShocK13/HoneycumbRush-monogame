@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HoneycombRush;
+using Microsoft.Xna.Framework;
 
 namespace HoneycumbRush;
 
@@ -17,6 +18,9 @@ public class HoneycumbRush : Game
 
         _graphics.IsFullScreen = false;
         IsMouseVisible = true;
+
+        Vector2 scaleVector = Vector2.One;
+        UIConstants.SetScale(scaleVector);
 
         _screenManager = new ScreenManager(this);
 

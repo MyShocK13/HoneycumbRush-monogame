@@ -21,10 +21,12 @@ public class GameplayScreen : GameScreen
     private Texture2D _controlstick;
     private Texture2D _beehiveTexture;
     private Texture2D _smokeButton;
-    
+    private Vector2 _smokeButtonPosition;
+
     private DifficultyMode _gameDifficultyLevel;
 
     private bool _isAtStartupCountDown;
+    private bool _levelEnded;
     private TimeSpan _startScreenTime;
 
 
@@ -32,7 +34,6 @@ public class GameplayScreen : GameScreen
 
     //        Vector2 controlstickStartupPosition;
     //        Vector2 controlstickBoundaryPosition;
-    //        Vector2 smokeButtonPosition;
     //        Vector2 smokeTextLocation;
     //        Vector2 lastTouchPosition;
     //        /// <summary>
@@ -46,7 +47,6 @@ public class GameplayScreen : GameScreen
     //        bool drawArrowInInterval;
     //        bool isInMotion;
     //        bool isLevelEnd;
-    //        bool levelEnded;
     //        bool isUserWon;
     //        bool userInputToExit;
 
@@ -67,13 +67,13 @@ public class GameplayScreen : GameScreen
     //        Vat vat;
 
 
-    //        public bool IsStarted
-    //        {
-    //            get
-    //            {
-    //                return !isAtStartupCountDown && !levelEnded;
-    //            }
-    //        }
+    public bool IsStarted
+    {
+        get
+        {
+            return !_isAtStartupCountDown && !_levelEnded;
+        }
+    }
 
     //        private bool IsInMotion
     //        {
@@ -123,7 +123,7 @@ public class GameplayScreen : GameScreen
         //            amountOfWorkerBee = 16;
 
         //            controlstickBoundaryPosition = new Vector2(34, 347);
-        //            smokeButtonPosition = new Vector2(664, 346);
+        _smokeButtonPosition = new Vector2(664, 346);
         //            controlstickStartupPosition = new Vector2(55, 369);
 
         //            IsInMotion = false;
@@ -145,8 +145,6 @@ public class GameplayScreen : GameScreen
 
     public void LoadAssets()
     {
-        Debug.WriteLine("LoadAssets");
-
         // Loads the animation dictionary from an xml file
         _animations = new Dictionary<string, ScaledAnimation>();
         LoadAnimationFromXML();
@@ -371,20 +369,20 @@ public class GameplayScreen : GameScreen
             DrawStartupString();
         }
 
-        //            if (IsActive && IsStarted)
-        //            {
-        //                DrawSmokeButton();
+        if (IsActive && IsStarted)
+        {
+            DrawSmokeButton();
 
-        //#if WINDOWS_PHONE
-        //                // Only draw the virtual thumbstick on the phone
-        //                ScreenManager.SpriteBatch.Draw(controlstickBoundary, controlstickBoundaryPosition, Color.White);
-        //                ScreenManager.SpriteBatch.Draw(controlstick, controlstickStartupPosition, Color.White);
-        //#endif
+            //#if WINDOWS_PHONE
+            //                // Only draw the virtual thumbstick on the phone
+            //                ScreenManager.SpriteBatch.Draw(controlstickBoundary, controlstickBoundaryPosition, Color.White);
+            //                ScreenManager.SpriteBatch.Draw(controlstick, controlstickStartupPosition, Color.White);
+            //#endif
 
-        //                ScreenManager.SpriteBatch.DrawString(font16px, SmokeText, smokeTextLocation, Color.White);
+            //                ScreenManager.SpriteBatch.DrawString(font16px, SmokeText, smokeTextLocation, Color.White);
 
-        //                DrawVatHoneyArrow();
-        //            }
+            //                DrawVatHoneyArrow();
+        }
 
         //            DrawLevelEndIfNecessary();
 
@@ -549,7 +547,7 @@ public class GameplayScreen : GameScreen
 
         //Vector2 scaleVector = ScreenManager.SpriteBatch.ScaleVector;
 
-        //Rectangle safeArea = SafeArea;
+        Rectangle safeArea = SafeArea;
 
         //Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
         //Vector2 honeyJarLocation = safeArea.GetVector() + new Vector2(UIConstants.HoneyJarLeftMargin, UIConstants.HoneyJarTopMargin);
@@ -568,12 +566,12 @@ public class GameplayScreen : GameScreen
         //            // Create all the beehives and the bees
         //            CreateBeehives(safeArea, jar);
 
-        //            // We only initialize the smoke button position here since we need access
-        //            // to the screen manager in order to do so (and it is null in the 
-        //            // constructor)
-        //            smokeButtonPosition =
-        //            new Vector2(safeArea.Right - UIConstants.SmokeButtonRightAbsoluteMargin,
-        //                    safeArea.Bottom - UIConstants.SmokeButtonBottomAbsoluteMargin);
+        // We only initialize the smoke button position here since we need access
+        // to the screen manager in order to do so (and it is null in the 
+        // constructor)
+        _smokeButtonPosition = new Vector2(
+            safeArea.Right - UIConstants.SmokeButtonRightAbsoluteMargin,
+            safeArea.Bottom - UIConstants.SmokeButtonBottomAbsoluteMargin);
 
         //            // Create the smoke gun's score bar
         //            int totalSmokeAmount = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].TotalSmokeAmount;
@@ -1151,35 +1149,20 @@ public class GameplayScreen : GameScreen
     //            }
     //        }
 
-    //        /// <summary>
-    //        /// Draws the smoke button.
-    //        /// </summary>
-    //        private void DrawSmokeButton()
-    //        {
-    //#if WINDOWS_PHONE
-    //            int buttonSize = UIConstants.SmokeButtonSize;
-
-    //            if (isSmokebuttonClicked)
-    //            {
-    //                ScreenManager.SpriteBatch.Draw(
-    //                    smokeButton, smokeButtonPosition, new Rectangle(buttonSize, 0, buttonSize, buttonSize),
-    //                    Color.White);
-    //            }
-    //            else
-    //            {
-    //                ScreenManager.SpriteBatch.Draw(
-    //                    smokeButton, smokeButtonPosition, new Rectangle(0, 0, buttonSize, buttonSize), Color.White);
-    //            }
-    //#else
-    //            ScreenManager.SpriteBatch.Draw(smokeButton,
-    //                new Rectangle(
-    //                    (int)smokeButtonPosition.X,
-    //            (int)smokeButtonPosition.Y,
-    //                    (int)(UIConstants.SmokeButtonSize * ScreenManager.SpriteBatch.ScaleVector.X),
-    //                    (int)(UIConstants.SmokeButtonSize * ScreenManager.SpriteBatch.ScaleVector.Y)),
-    //                Color.White);
-    //#endif
-    //        }
+    /// <summary>
+    /// Draws the smoke button.
+    /// </summary>
+    private void DrawSmokeButton()
+    {
+        ScreenManager.SpriteBatch.Draw(
+            _smokeButton,
+            new Rectangle(
+                (int)_smokeButtonPosition.X,
+                (int)_smokeButtonPosition.Y,
+                (int)(UIConstants.SmokeButtonSize),
+                (int)(UIConstants.SmokeButtonSize)),
+            Color.White);
+    }
 
     /// <summary>
     /// Draws the count down string.

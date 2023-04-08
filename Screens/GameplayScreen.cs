@@ -11,6 +11,8 @@ namespace HoneycombRush;
 
 public class GameplayScreen : GameScreen
 {
+    private const string SmokeText = "Smoke";
+
     private Dictionary<string, ScaledAnimation> _animations;
 
     private SpriteFont _font16px;
@@ -22,6 +24,7 @@ public class GameplayScreen : GameScreen
     private Texture2D _beehiveTexture;
     private Texture2D _smokeButton;
     private Vector2 _smokeButtonPosition;
+    private Vector2 _smokeTextLocation;
 
     private DifficultyMode _gameDifficultyLevel;
 
@@ -34,7 +37,6 @@ public class GameplayScreen : GameScreen
 
     //        Vector2 controlstickStartupPosition;
     //        Vector2 controlstickBoundaryPosition;
-    //        Vector2 smokeTextLocation;
     //        Vector2 lastTouchPosition;
     //        /// <summary>
     //        /// A vector describing the movement direction according to the current user input.
@@ -58,7 +60,6 @@ public class GameplayScreen : GameScreen
     //        List<Beehive> beehives = new List<Beehive>();
     //        List<Bee> bees = new List<Bee>();
 
-    //        const string SmokeText = "Smoke";
 
     //        TimeSpan gameElapsed;
 
@@ -373,13 +374,7 @@ public class GameplayScreen : GameScreen
         {
             DrawSmokeButton();
 
-            //#if WINDOWS_PHONE
-            //                // Only draw the virtual thumbstick on the phone
-            //                ScreenManager.SpriteBatch.Draw(controlstickBoundary, controlstickBoundaryPosition, Color.White);
-            //                ScreenManager.SpriteBatch.Draw(controlstick, controlstickStartupPosition, Color.White);
-            //#endif
-
-            //                ScreenManager.SpriteBatch.DrawString(font16px, SmokeText, smokeTextLocation, Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font16px, SmokeText, _smokeTextLocation, Color.White);
 
             //                DrawVatHoneyArrow();
         }
@@ -545,8 +540,6 @@ public class GameplayScreen : GameScreen
     {
         Debug.WriteLine("Create Game Components");
 
-        //Vector2 scaleVector = ScreenManager.SpriteBatch.ScaleVector;
-
         Rectangle safeArea = SafeArea;
 
         //Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
@@ -584,11 +577,9 @@ public class GameplayScreen : GameScreen
         //                (int)(UIConstants.SmokeButtonSize * scaleVector.Y * 3 / 4), Color.White,
         //                ScoreBar.ScoreBarOrientation.Horizontal, totalSmokeAmount, this, false);
 
-        //            smokeTextLocation = smokeButtonPosition +
-        //                    new Vector2(
-        //                        UIConstants.SmokeButtonSize * scaleVector.X / 2 -
-        //            font16px.MeasureString(SmokeText).X * scaleVector.X / 2,
-        //                        UIConstants.SmokeButtonSize * scaleVector.Y * 11 / 10);
+        _smokeTextLocation = _smokeButtonPosition + new Vector2(
+            UIConstants.SmokeButtonSize / 2 - _font16px.MeasureString(SmokeText).X / 2,
+            UIConstants.SmokeButtonSize * 11 / 10);
 
         //            ScreenManager.Game.Components.Add(smokeButtonScorebar);
 

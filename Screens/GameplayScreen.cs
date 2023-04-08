@@ -138,10 +138,6 @@ public class GameplayScreen : GameScreen
 
     //        #region Loading and Unloading
 
-
-    /// <summary>
-    /// Initialize the game's debug console.
-    /// </summary>
     public override void LoadContent()
     {
         base.LoadContent();
@@ -158,10 +154,8 @@ public class GameplayScreen : GameScreen
         // Loads all textures that are required
         LoadTextures();
 
-        //            // Create all game components
-        //            CreateGameComponents();
-
-        //            AudioManager.PlayMusic("InGameSong_Loop");
+        // Create all game components
+        CreateGameComponents();
     }
 
     //        /// <summary>
@@ -290,128 +284,114 @@ public class GameplayScreen : GameScreen
     //            beeKeeper.SetDirection(movementVector);
     //        }
 
-    //        /// <summary>
-    //        /// Perform the game's update logic.
-    //        /// </summary>
-    //        /// <param name="gameTime">Game time information.</param>
-    //        /// <param name="otherScreenHasFocus">Whether or not another screen currently has the focus.</param>
-    //        /// <param name="coveredByOtherScreen">Whether or not this screen is covered by another.</param>
-    //        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-    //        {
-    //            // When the game starts the first thing the user sees is the count down before the game actually begins
-    //            if (isAtStartupCountDown)
-    //            {
-    //                startScreenTime -= gameTime.ElapsedGameTime;
-    //            }
+    public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+    {
+        //            // When the game starts the first thing the user sees is the count down before the game actually begins
+        //            if (isAtStartupCountDown)
+        //            {
+        //                startScreenTime -= gameTime.ElapsedGameTime;
+        //            }
 
-    //            // Check for and handle a game over
-    //            if (CheckIfCurrentGameFinished())
-    //            {
-    //                base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        //            // Check for and handle a game over
+        //            if (CheckIfCurrentGameFinished())
+        //            {
+        //                base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-    //                return;
-    //            }
+        //                return;
+        //            }
 
-    //            if (!(IsActive && IsStarted))
-    //            {
-    //                base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-    //                return;
-    //            }
+        //            if (!(IsActive && IsStarted))
+        //            {
+        //                base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        //                return;
+        //            }
 
-    //            // Show all diagnostic counters
-    //            debugSystem.FpsCounter.Visible = showDebugInfo;
-    //            debugSystem.TimeRuler.Visible = showDebugInfo;
-    //            debugSystem.TimeRuler.ShowLog = showDebugInfo;
+        //            // Show all diagnostic counters
+        //            debugSystem.FpsCounter.Visible = showDebugInfo;
+        //            debugSystem.TimeRuler.Visible = showDebugInfo;
+        //            debugSystem.TimeRuler.ShowLog = showDebugInfo;
 
-    //            gameElapsed -= gameTime.ElapsedGameTime;
+        //            gameElapsed -= gameTime.ElapsedGameTime;
 
-    //#if WINDOWS_PHONE
-    //            HandleThumbStick();
-    //#endif
+        //#if WINDOWS_PHONE
+        //            HandleThumbStick();
+        //#endif
 
-    //            HandleSmoke();
+        //            HandleSmoke();
 
-    //            HandleCollision(gameTime);
+        //            HandleCollision(gameTime);
 
-    //            HandleVatHoneyArrow();
+        //            HandleVatHoneyArrow();
 
-    //            beeKeeper.DrawOrder = 1;
-    //            int beeKeeperY = (int)(beeKeeper.Position.Y + beeKeeper.Bounds.Height - 2);
+        //            beeKeeper.DrawOrder = 1;
+        //            int beeKeeperY = (int)(beeKeeper.Position.Y + beeKeeper.Bounds.Height - 2);
 
-    //            // We want to determine the draw order of the beekeeper,
-    //            // if the beekeeper is under half the height of the beehive 
-    //            // it should be drawn over the beehive.
-    //            foreach (Beehive beehive in beehives)
-    //            {
-    //                if (beeKeeperY > beehive.Bounds.Y)
-    //                {
-    //                    if (beehive.Bounds.Y + beehive.Bounds.Height / 2 < beeKeeperY)
-    //                    {
-    //                        beeKeeper.DrawOrder = Math.Max(beeKeeper.DrawOrder, beehive.Bounds.Y + 1);
-    //                    }
-    //                }
-    //            }
+        //            // We want to determine the draw order of the beekeeper,
+        //            // if the beekeeper is under half the height of the beehive 
+        //            // it should be drawn over the beehive.
+        //            foreach (Beehive beehive in beehives)
+        //            {
+        //                if (beeKeeperY > beehive.Bounds.Y)
+        //                {
+        //                    if (beehive.Bounds.Y + beehive.Bounds.Height / 2 < beeKeeperY)
+        //                    {
+        //                        beeKeeper.DrawOrder = Math.Max(beeKeeper.DrawOrder, beehive.Bounds.Y + 1);
+        //                    }
+        //                }
+        //            }
 
-    //            if (gameElapsed.Minutes == 0 && gameElapsed.Seconds == 10)
-    //            {
-    //                AudioManager.PlaySound("10SecondCountDown");
-    //            }
-    //            if (gameElapsed.Minutes == 0 && gameElapsed.Seconds == 30)
-    //            {
-    //                AudioManager.PlaySound("30SecondWarning");
-    //            }
+        //            if (gameElapsed.Minutes == 0 && gameElapsed.Seconds == 10)
+        //            {
+        //                AudioManager.PlaySound("10SecondCountDown");
+        //            }
+        //            if (gameElapsed.Minutes == 0 && gameElapsed.Seconds == 30)
+        //            {
+        //                AudioManager.PlaySound("30SecondWarning");
+        //            }
 
-    //            // Update the time remaining displayed on the vat
-    //            vat.DrawTimeLeft(gameElapsed);
+        //            // Update the time remaining displayed on the vat
+        //            vat.DrawTimeLeft(gameElapsed);
 
-    //            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-    //        }
+        base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+    }
 
+    public override void Draw(GameTime gameTime)
+    {
+        SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
-    //        #endregion
+        spriteBatch.Begin();
 
-    //        #region Render
+        Rectangle bounds = ScreenManager.GraphicsDevice.Viewport.Bounds;
+        spriteBatch.Draw(_background, bounds, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1);
 
 
-    //        /// <summary>
-    //        /// Draw the game screen.
-    //        /// </summary>
-    //        /// <param name="gameTime">Game time information.</param>
-    //        public override void Draw(GameTime gameTime)
-    //        {
-    //            ScreenManager.SpriteBatch.Begin();
+        //            // Draw count down screen
+        //            if (isAtStartupCountDown)
+        //            {
+        //                DrawStartupString();
+        //            }
 
-    //            ScreenManager.SpriteBatch.Draw(background, ScreenManager.GraphicsDevice.Viewport.Bounds, null,
-    //                Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1);
+        //            if (IsActive && IsStarted)
+        //            {
+        //                DrawSmokeButton();
 
+        //#if WINDOWS_PHONE
+        //                // Only draw the virtual thumbstick on the phone
+        //                ScreenManager.SpriteBatch.Draw(controlstickBoundary, controlstickBoundaryPosition, Color.White);
+        //                ScreenManager.SpriteBatch.Draw(controlstick, controlstickStartupPosition, Color.White);
+        //#endif
 
-    //            // Draw count down screen
-    //            if (isAtStartupCountDown)
-    //            {
-    //                DrawStartupString();
-    //            }
+        //                ScreenManager.SpriteBatch.DrawString(font16px, SmokeText, smokeTextLocation, Color.White);
 
-    //            if (IsActive && IsStarted)
-    //            {
-    //                DrawSmokeButton();
+        //                DrawVatHoneyArrow();
+        //            }
 
-    //#if WINDOWS_PHONE
-    //                // Only draw the virtual thumbstick on the phone
-    //                ScreenManager.SpriteBatch.Draw(controlstickBoundary, controlstickBoundaryPosition, Color.White);
-    //                ScreenManager.SpriteBatch.Draw(controlstick, controlstickStartupPosition, Color.White);
-    //#endif
+        //            DrawLevelEndIfNecessary();
 
-    //                ScreenManager.SpriteBatch.DrawString(font16px, SmokeText, smokeTextLocation, Color.White);
+        spriteBatch.End();
 
-    //                DrawVatHoneyArrow();
-    //            }
-
-    //            DrawLevelEndIfNecessary();
-
-    //            ScreenManager.SpriteBatch.End();
-
-    //            base.Draw(gameTime);
-    //        }
+        base.Draw(gameTime);
+    }
 
 
     //        #endregion
@@ -560,89 +540,90 @@ public class GameplayScreen : GameScreen
         }
     }
 
-    //        /// <summary>
-    //        /// Create all the game components.
-    //        /// </summary>
-    //        private void CreateGameComponents()
-    //        {
-    //            Vector2 scaleVector = ScreenManager.SpriteBatch.ScaleVector;
+    /// <summary>
+    /// Create all the game components.
+    /// </summary>
+    private void CreateGameComponents()
+    {
+        Debug.WriteLine("Create Game Components");
 
-    //            Rectangle safeArea = SafeArea;
+        //Vector2 scaleVector = ScreenManager.SpriteBatch.ScaleVector;
 
-    //            Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
-    //            Vector2 honeyJarLocation =
-    //            safeArea.GetVector() + new Vector2(UIConstants.HoneyJarLeftMargin, UIConstants.HoneyJarTopMargin);
+        //Rectangle safeArea = SafeArea;
 
-    //            Vector2 jarBarLocation = honeyJarLocation + new Vector2(0, jarTexture.Height * scaleVector.Y + 7);
+        //Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
+        //Vector2 honeyJarLocation = safeArea.GetVector() + new Vector2(UIConstants.HoneyJarLeftMargin, UIConstants.HoneyJarTopMargin);
 
-    //            ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 100, jarBarLocation,
-    //                (int)(jarTexture.Height / 6 * scaleVector.Y), (int)(jarTexture.Width * scaleVector.X), Color.Blue,
-    //                ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
-    //            ScreenManager.Game.Components.Add(scoreBar);
+        //            Vector2 jarBarLocation = honeyJarLocation + new Vector2(0, jarTexture.Height * scaleVector.Y + 7);
 
-    //            // Create the honey jar
-    //            jar = new HoneyJar(ScreenManager.Game, this, honeyJarLocation, scoreBar);
-    //            ScreenManager.Game.Components.Add(jar);
+        //            ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 100, jarBarLocation,
+        //                (int)(jarTexture.Height / 6 * scaleVector.Y), (int)(jarTexture.Width * scaleVector.X), Color.Blue,
+        //                ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
+        //            ScreenManager.Game.Components.Add(scoreBar);
 
-    //            // Create all the beehives and the bees
-    //            CreateBeehives(safeArea, jar);
+        //            // Create the honey jar
+        //            jar = new HoneyJar(ScreenManager.Game, this, honeyJarLocation, scoreBar);
+        //            ScreenManager.Game.Components.Add(jar);
 
-    //            // We only initialize the smoke button position here since we need access
-    //            // to the screen manager in order to do so (and it is null in the 
-    //            // constructor)
-    //            smokeButtonPosition =
-    //            new Vector2(safeArea.Right - UIConstants.SmokeButtonRightAbsoluteMargin,
-    //                    safeArea.Bottom - UIConstants.SmokeButtonBottomAbsoluteMargin);
+        //            // Create all the beehives and the bees
+        //            CreateBeehives(safeArea, jar);
 
-    //            // Create the smoke gun's score bar
-    //            int totalSmokeAmount = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].TotalSmokeAmount;
-    //            Vector2 smokeBarLocation = smokeButtonPosition +
-    //                new Vector2(UIConstants.SmokeButtonSize * scaleVector.X / 8,
-    //                UIConstants.SmokeButtonSize * scaleVector.Y);
+        //            // We only initialize the smoke button position here since we need access
+        //            // to the screen manager in order to do so (and it is null in the 
+        //            // constructor)
+        //            smokeButtonPosition =
+        //            new Vector2(safeArea.Right - UIConstants.SmokeButtonRightAbsoluteMargin,
+        //                    safeArea.Bottom - UIConstants.SmokeButtonBottomAbsoluteMargin);
 
-    //            smokeButtonScorebar = new ScoreBar(ScreenManager.Game, 0, totalSmokeAmount,
-    //                smokeBarLocation, (int)(UIConstants.SmokeButtonSize * scaleVector.X / 10),
-    //                (int)(UIConstants.SmokeButtonSize * scaleVector.Y * 3 / 4), Color.White,
-    //                ScoreBar.ScoreBarOrientation.Horizontal, totalSmokeAmount, this, false);
+        //            // Create the smoke gun's score bar
+        //            int totalSmokeAmount = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].TotalSmokeAmount;
+        //            Vector2 smokeBarLocation = smokeButtonPosition +
+        //                new Vector2(UIConstants.SmokeButtonSize * scaleVector.X / 8,
+        //                UIConstants.SmokeButtonSize * scaleVector.Y);
 
-    //            smokeTextLocation = smokeButtonPosition +
-    //                    new Vector2(
-    //                        UIConstants.SmokeButtonSize * scaleVector.X / 2 -
-    //            font16px.MeasureString(SmokeText).X * scaleVector.X / 2,
-    //                        UIConstants.SmokeButtonSize * scaleVector.Y * 11 / 10);
+        //            smokeButtonScorebar = new ScoreBar(ScreenManager.Game, 0, totalSmokeAmount,
+        //                smokeBarLocation, (int)(UIConstants.SmokeButtonSize * scaleVector.X / 10),
+        //                (int)(UIConstants.SmokeButtonSize * scaleVector.Y * 3 / 4), Color.White,
+        //                ScoreBar.ScoreBarOrientation.Horizontal, totalSmokeAmount, this, false);
 
-    //            ScreenManager.Game.Components.Add(smokeButtonScorebar);
+        //            smokeTextLocation = smokeButtonPosition +
+        //                    new Vector2(
+        //                        UIConstants.SmokeButtonSize * scaleVector.X / 2 -
+        //            font16px.MeasureString(SmokeText).X * scaleVector.X / 2,
+        //                        UIConstants.SmokeButtonSize * scaleVector.Y * 11 / 10);
 
-    //            // Creates the BeeKeeper
-    //            beeKeeper = new BeeKeeper(ScreenManager.Game, this);
-    //            beeKeeper.AnimationDefinitions = animations;
-    //            beeKeeper.ThumbStickArea = new Rectangle((int)controlstickBoundaryPosition.X,
-    //                        (int)controlstickBoundaryPosition.Y, controlstickBoundary.Width, controlstickBoundary.Height);
-    //            ScreenManager.Game.Components.Add(beeKeeper);
+        //            ScreenManager.Game.Components.Add(smokeButtonScorebar);
 
-    //            // Creates the vat
-    //            Texture2D vatTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/vat");
+        //            // Creates the BeeKeeper
+        //            beeKeeper = new BeeKeeper(ScreenManager.Game, this);
+        //            beeKeeper.AnimationDefinitions = animations;
+        //            beeKeeper.ThumbStickArea = new Rectangle((int)controlstickBoundaryPosition.X,
+        //                        (int)controlstickBoundaryPosition.Y, controlstickBoundary.Width, controlstickBoundary.Height);
+        //            ScreenManager.Game.Components.Add(beeKeeper);
 
-    //            Vector2 vatLocation = new Vector2(safeArea.Center.X - vatTexture.Width * scaleVector.X / 2,
-    //                safeArea.Bottom - vatTexture.Height * scaleVector.Y - UIConstants.VatBottomMargin);
-    //            Vector2 vatScorebarLocation = vatLocation +
-    //                new Vector2((vatTexture.Width * scaleVector.X - UIConstants.VatScorebarWidth) / 2,
-    //            vatTexture.Height * scaleVector.Y * 7 / 10);
+        //            // Creates the vat
+        //            Texture2D vatTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/vat");
 
-    //            scoreBar = new ScoreBar(ScreenManager.Game, 0, 300, vatScorebarLocation, UIConstants.VatScorebarHeight,
-    //                UIConstants.VatScorebarWidth, Color.White, ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
+        //            Vector2 vatLocation = new Vector2(safeArea.Center.X - vatTexture.Width * scaleVector.X / 2,
+        //                safeArea.Bottom - vatTexture.Height * scaleVector.Y - UIConstants.VatBottomMargin);
+        //            Vector2 vatScorebarLocation = vatLocation +
+        //                new Vector2((vatTexture.Width * scaleVector.X - UIConstants.VatScorebarWidth) / 2,
+        //            vatTexture.Height * scaleVector.Y * 7 / 10);
 
-    //            vat = new Vat(ScreenManager.Game, this, vatTexture, vatLocation, scoreBar);
-    //            ScreenManager.Game.Components.Add(vat);
+        //            scoreBar = new ScoreBar(ScreenManager.Game, 0, 300, vatScorebarLocation, UIConstants.VatScorebarHeight,
+        //                UIConstants.VatScorebarWidth, Color.White, ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
 
-    //            vatArrowPosition =
-    //                vatLocation + new Vector2(vatTexture.Width * scaleVector.X / 2 -
-    //                    arrowTexture.Width * scaleVector.X / 2, UIConstants.VatArrowOffset);
+        //            vat = new Vat(ScreenManager.Game, this, vatTexture, vatLocation, scoreBar);
+        //            ScreenManager.Game.Components.Add(vat);
 
-    //            ScreenManager.Game.Components.Add(scoreBar);
+        //            vatArrowPosition =
+        //                vatLocation + new Vector2(vatTexture.Width * scaleVector.X / 2 -
+        //                    arrowTexture.Width * scaleVector.X / 2, UIConstants.VatArrowOffset);
 
-    //            scoreBar.DrawOrder = vat.DrawOrder + 1;
-    //        }
+        //            ScreenManager.Game.Components.Add(scoreBar);
+
+        //            scoreBar.DrawOrder = vat.DrawOrder + 1;
+    }
 
     //        /// <summary>
     //        /// Creates all the beehives and bees.

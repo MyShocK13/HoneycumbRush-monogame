@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/GameScreenFont16px.spritefont
+/copy:Fonts/GameScreenFont16px.spritefont
+
+#begin Fonts/GameScreenFont16px.xnb
+/copy:Fonts/GameScreenFont16px.xnb
+
+#begin Fonts/GameScreenFont36px.spritefont
+/copy:Fonts/GameScreenFont36px.spritefont
+
+#begin Fonts/GameScreenFont36px.xnb
+/copy:Fonts/GameScreenFont36px.xnb
+
 #begin Fonts/MenuFont.spritefont
 /copy:Fonts/MenuFont.spritefont
 
@@ -21,6 +33,18 @@
 
 #begin Textures/AnimationsDefinition.xml
 /copy:Textures/AnimationsDefinition.xml
+
+#begin Textures/arrow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/arrow.png
 
 #begin Textures/Backgrounds/blank.png
 /importer:TextureImporter
@@ -46,6 +70,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Backgrounds/buttonBackground.png
 
+#begin Textures/Backgrounds/GamePlayBackground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Backgrounds/GamePlayBackground.png
+
 #begin Textures/Backgrounds/instructionsPC.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -70,6 +106,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Backgrounds/titleScreen.png
 
+#begin Textures/beehive.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/beehive.png
+
 #begin Textures/beeWingFlap.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -93,6 +141,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/collect.png
+
+#begin Textures/controlstick.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/controlstick.png
+
+#begin Textures/controlstickBoundary.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/controlstickBoundary.png
 
 #begin Textures/deposit.png
 /importer:TextureImporter
@@ -129,6 +201,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/SmokeAnimationStrip.png
+
+#begin Textures/smokeBtn.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/smokeBtn.png
 
 #begin Textures/SoldierBeeWingFlap.png
 /importer:TextureImporter

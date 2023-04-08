@@ -13,20 +13,20 @@ public class GameplayScreen : GameScreen
 {
     private Dictionary<string, ScaledAnimation> _animations;
 
+    private SpriteFont _font16px;
+    private SpriteFont _font36px;
+    private Texture2D _arrowTexture;
+    private Texture2D _background;
+    private Texture2D _controlstickBoundary;
+    private Texture2D _controlstick;
+    private Texture2D _beehiveTexture;
+    private Texture2D _smokeButton;
+    
     private DifficultyMode _gameDifficultyLevel;
 
     private TimeSpan _startScreenTime;
 
 
-    //        SpriteFont font16px;
-    //        SpriteFont font36px;
-
-    //        Texture2D arrowTexture;
-    //        Texture2D background;
-    //        Texture2D controlstickBoundary;
-    //        Texture2D controlstick;
-    //        Texture2D beehiveTexture;
-    //        Texture2D smokeButton;
     //        ScoreBar smokeButtonScorebar;
 
     //        Vector2 controlstickStartupPosition;
@@ -155,8 +155,8 @@ public class GameplayScreen : GameScreen
         _animations = new Dictionary<string, ScaledAnimation>();
         LoadAnimationFromXML();
 
-        //            // Loads all textures that are required
-        //            LoadTextures();
+        // Loads all textures that are required
+        LoadTextures();
 
         //            // Create all game components
         //            CreateGameComponents();
@@ -715,21 +715,23 @@ public class GameplayScreen : GameScreen
     //            }
     //        }
 
-    //        /// <summary>
-    //        /// Loads all the necessary textures.
-    //        /// </summary>
-    //        private void LoadTextures()
-    //        {
-    //            beehiveTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/beehive");
-    //            background = ScreenManager.Game.Content.Load<Texture2D>("Textures/Backgrounds/GamePlayBackground");
-    //            controlstickBoundary = ScreenManager.Game.Content.Load<Texture2D>("Textures/controlstickBoundary");
-    //            controlstick = ScreenManager.Game.Content.Load<Texture2D>("Textures/controlstick");
-    //            smokeButton = ScreenManager.Game.Content.Load<Texture2D>("Textures/smokeBtn");
-    //            font16px = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/GameScreenFont16px");
-    //            arrowTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/arrow");
-    //            font16px = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/GameScreenFont16px");
-    //            font36px = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/GameScreenFont36px");
-    //        }
+    /// <summary>
+    /// Loads all the necessary textures.
+    /// </summary>
+    private void LoadTextures()
+    {
+        _font16px = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/GameScreenFont16px");
+        _font36px = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/GameScreenFont36px");
+        
+        _beehiveTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/beehive");
+        _smokeButton = ScreenManager.Game.Content.Load<Texture2D>("Textures/smokeBtn");
+        _arrowTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/arrow");
+
+        _background = ScreenManager.Game.Content.Load<Texture2D>("Textures/Backgrounds/GamePlayBackground");
+        
+        _controlstickBoundary = ScreenManager.Game.Content.Load<Texture2D>("Textures/controlstickBoundary");
+        _controlstick = ScreenManager.Game.Content.Load<Texture2D>("Textures/controlstick");
+    }
 
     //#if WINDOWS_PHONE
     //        /// <summary>

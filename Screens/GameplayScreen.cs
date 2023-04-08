@@ -24,6 +24,7 @@ public class GameplayScreen : GameScreen
     
     private DifficultyMode _gameDifficultyLevel;
 
+    private bool _isAtStartupCountDown;
     private TimeSpan _startScreenTime;
 
 
@@ -44,7 +45,6 @@ public class GameplayScreen : GameScreen
     //        bool drawArrow;
     //        bool drawArrowInInterval;
     //        bool isInMotion;
-    //        bool isAtStartupCountDown;
     //        bool isLevelEnd;
     //        bool levelEnded;
     //        bool isUserWon;
@@ -127,7 +127,7 @@ public class GameplayScreen : GameScreen
         //            controlstickStartupPosition = new Vector2(55, 369);
 
         //            IsInMotion = false;
-        //            isAtStartupCountDown = true;
+        _isAtStartupCountDown = true;
         //            isLevelEnd = false;
 
         //            EnabledGestures = GestureType.Tap;
@@ -286,11 +286,11 @@ public class GameplayScreen : GameScreen
 
     public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
     {
-        //            // When the game starts the first thing the user sees is the count down before the game actually begins
-        //            if (isAtStartupCountDown)
-        //            {
-        //                startScreenTime -= gameTime.ElapsedGameTime;
-        //            }
+        // When the game starts the first thing the user sees is the count down before the game actually begins
+        if (_isAtStartupCountDown)
+        {
+            _startScreenTime -= gameTime.ElapsedGameTime;
+        }
 
         //            // Check for and handle a game over
         //            if (CheckIfCurrentGameFinished())
@@ -365,11 +365,11 @@ public class GameplayScreen : GameScreen
         spriteBatch.Draw(_background, bounds, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1);
 
 
-        //            // Draw count down screen
-        //            if (isAtStartupCountDown)
-        //            {
-        //                DrawStartupString();
-        //            }
+        // Draw count down screen
+        if (_isAtStartupCountDown)
+        {
+            DrawStartupString();
+        }
 
         //            if (IsActive && IsStarted)
         //            {
@@ -1181,39 +1181,35 @@ public class GameplayScreen : GameScreen
     //#endif
     //        }
 
-    //        /// <summary>
-    //        /// Draws the count down string.
-    //        /// </summary>
-    //        private void DrawStartupString()
-    //        {
-    //            // If needed
-    //            if (isAtStartupCountDown)
-    //            {
-    //                string text = string.Empty;
+    /// <summary>
+    /// Draws the count down string.
+    /// </summary>
+    private void DrawStartupString()
+    {
+        // If needed
+        if (_isAtStartupCountDown)
+        {
+            string text = string.Empty;
 
-    //                // If countdown is done
-    //                if (startScreenTime.Seconds == 0)
-    //                {
-    //                    text = "Go!";
-    //                    isAtStartupCountDown = false;
-    //                    AudioManager.PlaySound("BeeBuzzing_Loop", true, .6f);
-    //                }
-    //                else
-    //                {
-    //                    text = startScreenTime.Seconds.ToString();
-    //                }
+            // If countdown is done
+            if (_startScreenTime.Seconds == 0)
+            {
+                text = "Go!";
+                _isAtStartupCountDown = false;
+            }
+            else
+            {
+                text = _startScreenTime.Seconds.ToString();
+            }
 
-    //                Vector2 size = font16px.MeasureString(text);
+            Vector2 viewportSize = new Vector2(
+                ScreenManager.GraphicsDevice.Viewport.Width,
+                ScreenManager.GraphicsDevice.Viewport.Height);
+            Vector2 size = _font16px.MeasureString(text);
 
+            Vector2 textPosition = (viewportSize - size) / 2f;
 
-    //                Vector2 textPosition = (new Vector2(ScreenManager.GraphicsDevice.Viewport.Width,
-    //                    ScreenManager.GraphicsDevice.Viewport.Height) - size) / 2f;
-
-    //                ScreenManager.SpriteBatch.DrawString(font36px, text, textPosition, Color.White);
-    //            }
-    //        }
-
-
-    //        #endregion
-    //    }
+            ScreenManager.SpriteBatch.DrawString(_font36px, text, textPosition, Color.White);
+        }
+    }
 }

@@ -38,6 +38,16 @@ class LoadingAndInstructionScreen : GameScreen
             {
                 LoadResources();
             }
+            else if (input.IsNewKeyPress(Keys.Escape, ControllingPlayer, out player))
+            {
+                foreach (GameScreen screen in ScreenManager.GetScreens())
+                {
+                    screen.ExitScreen();
+                }
+
+                ScreenManager.AddScreen(new BackgroundScreen("titleScreen"), null);
+                ScreenManager.AddScreen(new MainMenuScreen(), PlayerIndex.One);
+            }
         }
             
         base.HandleInput(gameTime, input);

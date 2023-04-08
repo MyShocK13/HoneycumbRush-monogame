@@ -374,7 +374,7 @@ public class GameplayScreen : GameScreen
         {
             DrawSmokeButton();
 
-            ScreenManager.SpriteBatch.DrawString(_font16px, SmokeText, _smokeTextLocation, Color.White);
+            spriteBatch.DrawString(_font16px, SmokeText, _smokeTextLocation, Color.White);
 
             //                DrawVatHoneyArrow();
         }

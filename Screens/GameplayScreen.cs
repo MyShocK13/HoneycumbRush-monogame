@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,6 +27,10 @@ public class GameplayScreen : GameScreen
     private Vector2 _smokeButtonPosition;
     private Vector2 _smokeTextLocation;
     private Vector2 _vatArrowPosition;
+    /// <summary>
+    /// A vector describing the movement direction according to the current user input.
+    /// </summary>
+    private Vector2 _movementVector;
 
     private DifficultyMode _gameDifficultyLevel;
     private BeeKeeper _beeKeeper;
@@ -37,6 +42,8 @@ public class GameplayScreen : GameScreen
     private bool _levelEnded;
     private bool _drawArrow;
     private bool _drawArrowInInterval;
+    private bool _isSmokebuttonClicked;
+    private bool _isInMotion;
     private int _arrowCounter;
     private TimeSpan _startScreenTime;
 
@@ -45,13 +52,7 @@ public class GameplayScreen : GameScreen
     //        Vector2 controlstickStartupPosition;
     //        Vector2 controlstickBoundaryPosition;
     //        Vector2 lastTouchPosition;
-    //        /// <summary>
-    //        /// A vector describing the movement direction according to the current user input.
-    //        /// </summary>
-    //        Vector2 movementVector;
 
-    //        bool isSmokebuttonClicked;
-    //        bool isInMotion;
     //        bool isLevelEnd;
     //        bool isUserWon;
     //        bool userInputToExit;
@@ -76,21 +77,21 @@ public class GameplayScreen : GameScreen
         }
     }
 
-    //        private bool IsInMotion
-    //        {
-    //            get
-    //            {
-    //                return isInMotion;
-    //            }
-    //            set
-    //            {
-    //                isInMotion = value;
-    //                if (beeKeeper != null)
-    //                {
-    //                    beeKeeper.IsInMotion = isInMotion;
-    //                }
-    //            }
-    //        }
+    private bool IsInMotion
+    {
+        get
+        {
+            return _isInMotion;
+        }
+        set
+        {
+            _isInMotion = value;
+            if (_beeKeeper != null)
+            {
+                _beeKeeper.IsInMotion = _isInMotion;
+            }
+        }
+    }
 
     //        DebugSystem debugSystem;
     //        bool showDebugInfo = false;
@@ -182,106 +183,99 @@ public class GameplayScreen : GameScreen
     //        #region Update
 
 
-    //        /// <summary>
-    //        /// Handle the player's input.
-    //        /// </summary>
-    //        /// <param name="input"></param>
-    //        public override void HandleInput(GameTime gameTime, InputState input)
-    //        {
-    //            if (IsActive)
-    //            {
-    //                if (input == null)
-    //                {
-    //                    throw new ArgumentNullException("input");
-    //                }
+    /// <summary>
+    /// Handle the player's input.
+    /// </summary>
+    /// <param name="input"></param>
+    public override void HandleInput(GameTime gameTime, InputState input)
+    {
+        if (IsActive)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
 
-    //                if (input.IsPauseGame(null))
-    //                {
-    //                    PauseCurrentGame();
-    //                }
-    //            }
+            //if (input.IsPauseGame(null))
+            //{
+            //    PauseCurrentGame();
+            //}
+        }
 
-    //            if (input.TouchState.Count > 0)
-    //            {
-    //                foreach (TouchLocation touch in input.TouchState)
-    //                {
-    //                    lastTouchPosition = touch.Position;
-    //                }
-    //            }
+        _isSmokebuttonClicked = false;
 
-    //            isSmokebuttonClicked = false;
+        PlayerIndex player;
 
-    //            PlayerIndex player;
+        //            VirtualThumbsticks.Update(input);
 
-    //            VirtualThumbsticks.Update(input);
+        //            if (input.Gestures.Count > 0)
+        //            {
+        //                GestureSample topGesture = input.Gestures[0];
 
-    //            if (input.Gestures.Count > 0)
-    //            {
-    //                GestureSample topGesture = input.Gestures[0];
+        //                if (topGesture.GestureType == GestureType.Tap &&
+        //                    deviceUpperRightCorner.Contains(new Point((int)topGesture.Position.X, (int)topGesture.Position.Y)))
+        //                {
+        //                    showDebugInfo = !showDebugInfo;
+        //                }
+        //            }
 
-    //                if (topGesture.GestureType == GestureType.Tap &&
-    //                    deviceUpperRightCorner.Contains(new Point((int)topGesture.Position.X, (int)topGesture.Position.Y)))
-    //                {
-    //                    showDebugInfo = !showDebugInfo;
-    //                }
-    //            }
+        //            if (isLevelEnd)
+        //            {
+        //                if (input.Gestures.Count > 0)
+        //                {
+        //                    if (input.Gestures[0].GestureType == GestureType.Tap)
+        //                    {
+        //                        userInputToExit = true;
+        //                    }
+        //                }
 
-    //            if (isLevelEnd)
-    //            {
-    //                if (input.Gestures.Count > 0)
-    //                {
-    //                    if (input.Gestures[0].GestureType == GestureType.Tap)
-    //                    {
-    //                        userInputToExit = true;
-    //                    }
-    //                }
+        //                if (input.IsNewKeyPress(Keys.Enter, ControllingPlayer, out player) ||
+        //                    input.IsNewKeyPress(Keys.Space, ControllingPlayer, out player))
+        //                {
+        //                    userInputToExit = true;
+        //                }
+        //            }
 
-    //                if (input.IsNewKeyPress(Keys.Enter, ControllingPlayer, out player) ||
-    //                    input.IsNewKeyPress(Keys.Space, ControllingPlayer, out player))
-    //                {
-    //                    userInputToExit = true;
-    //                }
-    //            }
+        if (!IsStarted)
+        {
+            return;
+        }
 
-    //            if (!IsStarted)
-    //            {
-    //                return;
-    //            }
+        //            // If there was any touch
+        //            if (VirtualThumbsticks.RightThumbstickCenter.HasValue)
+        //            {
+        //                // Button Bounds
+        //                Rectangle buttonRectangle = new Rectangle((int)smokeButtonPosition.X, (int)smokeButtonPosition.Y,
+        //                                                            smokeButton.Width / 2, smokeButton.Height);
 
-    //            // If there was any touch
-    //            if (VirtualThumbsticks.RightThumbstickCenter.HasValue)
-    //            {
-    //                // Button Bounds
-    //                Rectangle buttonRectangle = new Rectangle((int)smokeButtonPosition.X, (int)smokeButtonPosition.Y,
-    //                                                            smokeButton.Width / 2, smokeButton.Height);
+        //                // Touch Bounds
+        //                Rectangle touchRectangle = new Rectangle((int)VirtualThumbsticks.RightThumbstickCenter.Value.X,
+        //                                                        (int)VirtualThumbsticks.RightThumbstickCenter.Value.Y,
+        //                                                        1, 1);
+        //                // If the touch is in the button
+        //                if (buttonRectangle.Contains(touchRectangle) && !beeKeeper.IsCollectingHoney && !beeKeeper.IsStung)
+        //                {
+        //                    _isSmokebuttonClicked = true;
+        //                }
+        //            }
 
-    //                // Touch Bounds
-    //                Rectangle touchRectangle = new Rectangle((int)VirtualThumbsticks.RightThumbstickCenter.Value.X,
-    //                                                        (int)VirtualThumbsticks.RightThumbstickCenter.Value.Y,
-    //                                                        1, 1);
-    //                // If the touch is in the button
-    //                if (buttonRectangle.Contains(touchRectangle) && !beeKeeper.IsCollectingHoney && !beeKeeper.IsStung)
-    //                {
-    //                    isSmokebuttonClicked = true;
-    //                }
-    //            }
+        // Handle keyboard
+        //            if (input.IsNewKeyPress(Keys.Y, ControllingPlayer, out player))
+        //            {
+        //                showDebugInfo = !showDebugInfo;
+        //            }
 
-    //            // Handle keyboard
-    //            if (input.IsNewKeyPress(Keys.Y, ControllingPlayer, out player))
-    //            {
-    //                showDebugInfo = !showDebugInfo;
-    //            }
-    //            if ((input.IsKeyDown(Keys.Space, ControllingPlayer, out player) ||
-    //                  input.IsNewMouseClick(InputState.MouseButton.Right, ControllingPlayer, out player))
-    //                && !beeKeeper.IsCollectingHoney
-    //                && !beeKeeper.IsStung)
-    //            {
-    //                isSmokebuttonClicked = true;
-    //            }
+        if ((input.IsKeyDown(Keys.Space, ControllingPlayer, out player) ||
+              input.IsNewMouseClick(InputState.MouseButton.Right, ControllingPlayer, out player))
+            && !_beeKeeper.IsCollectingHoney
+            && !_beeKeeper.IsStung)
+        {
+            _isSmokebuttonClicked = true;
+        }
 
-    //            movementVector = SetMotion(input);
-    //            beeKeeper.SetDirection(movementVector);
-    //        }
+        _movementVector = SetMotion(input);
+        _beeKeeper.SetDirection(_movementVector);
+    }
 
     public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
     {
@@ -732,85 +726,85 @@ public class GameplayScreen : GameScreen
     //        }
     //#endif
 
-    //        /// <summary>
-    //        /// Moves the beekeeper.
-    //        /// </summary>
-    //        /// <returns>Returns a vector indicating the beekeeper's movement direction.
-    //        /// </returns>
-    //        private Vector2 SetMotion(InputState input)
-    //        {
-    //            // Calculate the beekeeper location, if allow moving
-    //            Rectangle safeArea = SafeArea;
+    /// <summary>
+    /// Moves the beekeeper.
+    /// </summary>
+    /// <returns>Returns a vector indicating the beekeeper's movement direction.
+    /// </returns>
+    private Vector2 SetMotion(InputState input)
+    {
+        // Calculate the beekeeper location, if allow moving
+        Rectangle safeArea = SafeArea;
 
-    //            PlayerIndex playerIndex;
+        PlayerIndex playerIndex;
 
-    //            Vector2 leftThumbstick = VirtualThumbsticks.LeftThumbstick;
+        //Vector2 leftThumbstick = VirtualThumbsticks.LeftThumbstick;
+        Vector2 leftThumbstick = Vector2.Zero;
 
-    //            // Move on to keyboard input if we still have nothing
-    //            if (leftThumbstick == Vector2.Zero)
-    //            {
-    //                float vecX = 0;
-    //                float vecY = 0;
+        // Move on to keyboard input if we still have nothing
+        if (leftThumbstick == Vector2.Zero)
+        {
+            float vecX = 0;
+            float vecY = 0;
 
-    //                if (input.IsKeyDown(Keys.Left, ControllingPlayer, out playerIndex))
-    //                {
-    //                    vecX--;
-    //                }
-    //                if (input.IsKeyDown(Keys.Right, ControllingPlayer, out playerIndex))
-    //                {
-    //                    vecX++;
-    //                }
-    //                if (input.IsKeyDown(Keys.Up, ControllingPlayer, out playerIndex))
-    //                {
-    //                    vecY--;
-    //                }
-    //                if (input.IsKeyDown(Keys.Down, ControllingPlayer, out playerIndex))
-    //                {
-    //                    vecY++;
-    //                }
-    //                if (input.IsMouseDown(InputState.MouseButton.Left, ControllingPlayer, out playerIndex))
-    //                {
-    //                    vecX = input.CurrentMouseStates[(int)playerIndex].X - beeKeeper.Bounds.X;
-    //                    vecY = input.CurrentMouseStates[(int)playerIndex].Y - beeKeeper.Bounds.Y;
-    //                }
-    //                leftThumbstick = new Vector2(vecX, vecY);
-    //                leftThumbstick.Normalize();
-    //            }
+            if (input.IsKeyDown(Keys.Left, ControllingPlayer, out playerIndex))
+            {
+                vecX--;
+            }
+            if (input.IsKeyDown(Keys.Right, ControllingPlayer, out playerIndex))
+            {
+                vecX++;
+            }
+            if (input.IsKeyDown(Keys.Up, ControllingPlayer, out playerIndex))
+            {
+                vecY--;
+            }
+            if (input.IsKeyDown(Keys.Down, ControllingPlayer, out playerIndex))
+            {
+                vecY++;
+            }
+            if (input.IsMouseDown(InputState.MouseButton.Left, ControllingPlayer, out playerIndex))
+            {
+                vecX = input.CurrentMouseStates[(int)playerIndex].X - _beeKeeper.Bounds.X;
+                vecY = input.CurrentMouseStates[(int)playerIndex].Y - _beeKeeper.Bounds.Y;
+            }
+            leftThumbstick = new Vector2(vecX, vecY);
+            leftThumbstick.Normalize();
+        }
 
-    //            Vector2 movementVector = leftThumbstick * 12f * ScreenManager.SpriteBatch.ScaleVector;
+        Vector2 _movementVector = leftThumbstick * 12f;
 
-    //            Rectangle futureBounds = beeKeeper.Bounds;
-    //            futureBounds.X += (int)movementVector.X;
-    //            futureBounds.Y += (int)movementVector.Y;
+        Rectangle futureBounds = _beeKeeper.Bounds;
+        futureBounds.X += (int)_movementVector.X;
+        futureBounds.Y += (int)_movementVector.Y;
 
-    //            if (futureBounds.Left <= safeArea.Left || futureBounds.Right >= safeArea.Right)
-    //            {
-    //                movementVector.X = 0;
-    //            }
-    //            if (futureBounds.Top <= safeArea.Top || futureBounds.Bottom >= safeArea.Bottom)
-    //            {
-    //                movementVector.Y = 0;
-    //            }
+        if (futureBounds.Left <= safeArea.Left || futureBounds.Right >= safeArea.Right)
+        {
+            _movementVector.X = 0;
+        }
+        if (futureBounds.Top <= safeArea.Top || futureBounds.Bottom >= safeArea.Bottom)
+        {
+            _movementVector.Y = 0;
+        }
 
-    //            if (movementVector == Vector2.Zero)
-    //            {
-    //                IsInMotion = false;
-    //                beeKeeper.SetMovement(Vector2.Zero);
-    //            }
-    //            else
-    //            {
-    //                Vector2 beekeeperCalculatedPosition =
-    //                    new Vector2(beeKeeper.CentralCollisionArea.X, beeKeeper.CentralCollisionArea.Y) + movementVector;
+        if (_movementVector == Vector2.Zero)
+        {
+            IsInMotion = false;
+            _beeKeeper.SetMovement(Vector2.Zero);
+        }
+        else
+        {
+            Vector2 beekeeperCalculatedPosition = new Vector2(_beeKeeper.CentralCollisionArea.X, _beeKeeper.CentralCollisionArea.Y) + _movementVector;
 
-    //                if (!CheckBeehiveCollision(beekeeperCalculatedPosition))
-    //                {
-    //                    beeKeeper.SetMovement(movementVector);
-    //                    IsInMotion = true;
-    //                }
-    //            }
+            //if (!CheckBeehiveCollision(beekeeperCalculatedPosition))
+            //{
+            _beeKeeper.SetMovement(_movementVector);
+            IsInMotion = true;
+            //}
+        }
 
-    //            return movementVector;
-    //        }
+        return _movementVector;
+    }
 
     //        /// <summary>
     //        /// Checks if the beekeeper collides with a beehive.
@@ -833,7 +827,7 @@ public class GameplayScreen : GameScreen
     //            }
 
     //            return false;
-    //        }
+    //}
 
     //        /// <summary>
     //        /// Check for any of the possible collisions.
@@ -910,7 +904,7 @@ public class GameplayScreen : GameScreen
     //            if (beeKeeper.Bounds.HasCollision(vat.VatDepositArea))
     //            {
     //                if (jar.HasHoney && !beeKeeper.IsStung && !beeKeeper.IsDepositingHoney &&
-    //                    movementVector == Vector2.Zero)
+    //                    _movementVector == Vector2.Zero)
     //                {
     //                    beeKeeper.StartTransferHoney(4, EndHoneyDeposit);
     //                }
@@ -951,7 +945,7 @@ public class GameplayScreen : GameScreen
     //                // If the beekeeper intersects with the beehive
     //                if (beeKeeper.Bounds.HasCollision(beehive.Bounds))
     //                {
-    //                    if (movementVector == Vector2.Zero)
+    //                    if (_movementVector == Vector2.Zero)
     //                    {
     //                        collidedBeehive = beehive;
     //                        isCollidingWithBeehive = true;
@@ -1032,7 +1026,7 @@ public class GameplayScreen : GameScreen
     //        private void HandleSmoke()
     //        {
     //            // If not currently shooting, refill the gun
-    //            if (!isSmokebuttonClicked)
+    //            if (!_isSmokebuttonClicked)
     //            {
     //                smokeButtonScorebar.IncreaseCurrentValue(
     //                    ConfigurationManager.ModesConfiguration[gameDifficultyLevel].IncreaseAmountSpeed);

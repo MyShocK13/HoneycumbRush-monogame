@@ -31,11 +31,11 @@ static class UIConstants
         SmokeButtonRightAbsoluteMargin = 170 * scaleVector.X;
         SmokeButtonBottomAbsoluteMargin = 200 * scaleVector.Y;
 
-        //            SprayUpOffset = 24 * scaleVector.Y;
-        //            SprayMiddleOffset = 65 * scaleVector.Y;
-        //            SprayDownOffset = 110 * scaleVector.Y;
-        //            SprayRightOffset = 230 * scaleVector.X;
-        //            SprayLeftOffset = 130 * scaleVector.X;
+        SprayUpOffset = 24 * scaleVector.Y;
+        SprayMiddleOffset = 65 * scaleVector.Y;
+        SprayDownOffset = 110 * scaleVector.Y;
+        SprayRightOffset = 230 * scaleVector.X;
+        SprayLeftOffset = 130 * scaleVector.X;
 
         //            HighScorePlaceLeftMargin = 50 * scaleVector.X;
         //            HighScoreNameLeftMargin = 300 * scaleVector.X;
@@ -75,11 +75,11 @@ static class UIConstants
     /// </summary>
     public static float SmokeButtonBottomAbsoluteMargin { get; private set; }
 
-    //        public static float SprayUpOffset { get; private set; }
-    //        public static float SprayMiddleOffset { get; private set; }
-    //        public static float SprayDownOffset { get; private set; }
-    //        public static float SprayRightOffset { get; private set; }
-    //        public static float SprayLeftOffset { get; private set; }
+    public static float SprayUpOffset { get; private set; }
+    public static float SprayMiddleOffset { get; private set; }
+    public static float SprayDownOffset { get; private set; }
+    public static float SprayRightOffset { get; private set; }
+    public static float SprayLeftOffset { get; private set; }
 
     //        public static float HighScorePlaceLeftMargin { get; private set; }
     //        public static float HighScoreNameLeftMargin { get; private set; }

@@ -28,6 +28,7 @@ public class GameplayScreen : GameScreen
     private Vector2 _vatArrowPosition;
 
     private DifficultyMode _gameDifficultyLevel;
+    private BeeKeeper _beeKeeper;
     private Vat _vat;
     private HoneyJar _jar;
     private ScoreBar _smokeButtonScorebar;
@@ -65,7 +66,6 @@ public class GameplayScreen : GameScreen
 
     //        TimeSpan gameElapsed;
 
-    //        BeeKeeper beeKeeper;
 
 
     public bool IsStarted
@@ -577,12 +577,12 @@ public class GameplayScreen : GameScreen
 
         ScreenManager.Game.Components.Add(_smokeButtonScorebar);
 
-        //            // Creates the BeeKeeper
-        //            beeKeeper = new BeeKeeper(ScreenManager.Game, this);
-        //            beeKeeper.AnimationDefinitions = animations;
+        // Creates the BeeKeeper
+        _beeKeeper = new BeeKeeper(ScreenManager.Game, this);
+        _beeKeeper.AnimationDefinitions = _animations;
         //            beeKeeper.ThumbStickArea = new Rectangle((int)controlstickBoundaryPosition.X,
         //                        (int)controlstickBoundaryPosition.Y, controlstickBoundary.Width, controlstickBoundary.Height);
-        //            ScreenManager.Game.Components.Add(beeKeeper);
+        ScreenManager.Game.Components.Add(_beeKeeper);
 
         // Creates the vat
         Texture2D vatTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/vat");

@@ -29,6 +29,7 @@ public class GameplayScreen : GameScreen
 
     private DifficultyMode _gameDifficultyLevel;
     private Vat _vat;
+    HoneyJar _jar;
 
     private bool _isAtStartupCountDown;
     private bool _levelEnded;
@@ -65,7 +66,6 @@ public class GameplayScreen : GameScreen
     //        TimeSpan gameElapsed;
 
     //        BeeKeeper beeKeeper;
-    //        HoneyJar jar;
 
 
     public bool IsStarted
@@ -373,9 +373,7 @@ public class GameplayScreen : GameScreen
         if (IsActive && IsStarted)
         {
             DrawSmokeButton();
-
             spriteBatch.DrawString(_font16px, SmokeText, _smokeTextLocation, Color.White);
-
             DrawVatHoneyArrow();
         }
 
@@ -542,19 +540,18 @@ public class GameplayScreen : GameScreen
 
         Rectangle safeArea = SafeArea;
 
-        //Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
-        //Vector2 honeyJarLocation = safeArea.GetVector() + new Vector2(UIConstants.HoneyJarLeftMargin, UIConstants.HoneyJarTopMargin);
+        Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
+        Vector2 honeyJarLocation = safeArea.GetVector() + new Vector2(UIConstants.HoneyJarLeftMargin, UIConstants.HoneyJarTopMargin);
 
-        //            Vector2 jarBarLocation = honeyJarLocation + new Vector2(0, jarTexture.Height * scaleVector.Y + 7);
+        Vector2 jarBarLocation = honeyJarLocation + new Vector2(0, jarTexture.Height + 7);
 
-        //            ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 100, jarBarLocation,
-        //                (int)(jarTexture.Height / 6 * scaleVector.Y), (int)(jarTexture.Width * scaleVector.X), Color.Blue,
-        //                ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
-        //            ScreenManager.Game.Components.Add(scoreBar);
+        ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 100, jarBarLocation, (int)(jarTexture.Height / 6), (int)(jarTexture.Width), Color.Blue,
+            ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
+        ScreenManager.Game.Components.Add(scoreBar);
 
-        //            // Create the honey jar
-        //            jar = new HoneyJar(ScreenManager.Game, this, honeyJarLocation, scoreBar);
-        //            ScreenManager.Game.Components.Add(jar);
+        // Create the honey jar
+        _jar = new HoneyJar(ScreenManager.Game, this, jarTexture, honeyJarLocation, scoreBar);
+        ScreenManager.Game.Components.Add(_jar);
 
         //            // Create all the beehives and the bees
         //            CreateBeehives(safeArea, jar);
@@ -600,7 +597,7 @@ public class GameplayScreen : GameScreen
             (vatTexture.Width - UIConstants.VatScorebarWidth) / 2,
             vatTexture.Height * 7 / 10);
 
-        ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 300, vatScorebarLocation, UIConstants.VatScorebarHeight,
+        scoreBar = new ScoreBar(ScreenManager.Game, 0, 300, vatScorebarLocation, UIConstants.VatScorebarHeight,
                 UIConstants.VatScorebarWidth, Color.White, ScoreBar.ScoreBarOrientation.Horizontal, 0, this, true);
 
         _vat = new Vat(ScreenManager.Game, this, vatTexture, vatLocation, scoreBar);

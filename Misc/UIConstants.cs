@@ -19,8 +19,8 @@ static class UIConstants
         //            BeehiveTopMargin = 30 * scaleVector.Y;
         //            BeehiveMiddleOffset = 70 * scaleVector.Y;
 
-        //            HoneyJarTopMargin = 12 * scaleVector.Y;
-        //            HoneyJarLeftMargin = 30 * scaleVector.Y;
+        HoneyJarTopMargin = 12 * scaleVector.Y;
+        HoneyJarLeftMargin = 30 * scaleVector.Y;
 
         VatArrowOffset = -35 * scaleVector.Y;
         VatBottomMargin = 50 * scaleVector.Y;
@@ -53,8 +53,8 @@ static class UIConstants
     //        /// </summary>
     //        public static float BeehiveMiddleOffset { get; private set; }
 
-    //        public static float HoneyJarTopMargin { get; private set; }
-    //        public static float HoneyJarLeftMargin { get; private set; }
+    public static float HoneyJarTopMargin { get; private set; }
+    public static float HoneyJarLeftMargin { get; private set; }
 
     public static float VatArrowOffset { get; private set; }
     public static float VatBottomMargin { get; private set; }

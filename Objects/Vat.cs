@@ -109,9 +109,6 @@ public class Vat : TexturedDrawableGameComponent
         DrawOrder = (int)(position.Y + Bounds.Height);
     }
 
-    /// <summary>
-    /// Loads the content that will be used by this component.
-    /// </summary>
     protected override void LoadContent()
     {
         _font14px = Game.Content.Load<SpriteFont>("Fonts/GameScreenFont14px");
@@ -125,10 +122,6 @@ public class Vat : TexturedDrawableGameComponent
         base.LoadContent();
     }
 
-    /// <summary>
-    /// Draws the component.
-    /// </summary>
-    /// <param name="gameTime">Game time information.</param>
     public override void Draw(GameTime gameTime)
     {
         if (!_gamePlayScreen.IsActive)

@@ -29,7 +29,8 @@ public class GameplayScreen : GameScreen
 
     private DifficultyMode _gameDifficultyLevel;
     private Vat _vat;
-    HoneyJar _jar;
+    private HoneyJar _jar;
+    private ScoreBar _smokeButtonScorebar;
 
     private bool _isAtStartupCountDown;
     private bool _levelEnded;
@@ -39,7 +40,6 @@ public class GameplayScreen : GameScreen
     private TimeSpan _startScreenTime;
 
 
-    //        ScoreBar smokeButtonScorebar;
 
     //        Vector2 controlstickStartupPosition;
     //        Vector2 controlstickBoundaryPosition;
@@ -563,22 +563,19 @@ public class GameplayScreen : GameScreen
             safeArea.Right - UIConstants.SmokeButtonRightAbsoluteMargin,
             safeArea.Bottom - UIConstants.SmokeButtonBottomAbsoluteMargin);
 
-        //            // Create the smoke gun's score bar
-        //            int totalSmokeAmount = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].TotalSmokeAmount;
-        //            Vector2 smokeBarLocation = smokeButtonPosition +
-        //                new Vector2(UIConstants.SmokeButtonSize * scaleVector.X / 8,
-        //                UIConstants.SmokeButtonSize * scaleVector.Y);
+        // Create the smoke gun's score bar
+        //int totalSmokeAmount = ConfigurationManager.ModesConfiguration[_gameDifficultyLevel].TotalSmokeAmount;
+        int totalSmokeAmount = 100;
+        Vector2 smokeBarLocation = _smokeButtonPosition + new Vector2(UIConstants.SmokeButtonSize / 8, UIConstants.SmokeButtonSize);
 
-        //            smokeButtonScorebar = new ScoreBar(ScreenManager.Game, 0, totalSmokeAmount,
-        //                smokeBarLocation, (int)(UIConstants.SmokeButtonSize * scaleVector.X / 10),
-        //                (int)(UIConstants.SmokeButtonSize * scaleVector.Y * 3 / 4), Color.White,
-        //                ScoreBar.ScoreBarOrientation.Horizontal, totalSmokeAmount, this, false);
+        _smokeButtonScorebar = new ScoreBar(ScreenManager.Game, 0, totalSmokeAmount, smokeBarLocation, (int)(UIConstants.SmokeButtonSize / 10),
+            (int)(UIConstants.SmokeButtonSize * 3 / 4), Color.White, ScoreBar.ScoreBarOrientation.Horizontal, totalSmokeAmount, this, false);
 
         _smokeTextLocation = _smokeButtonPosition + new Vector2(
             UIConstants.SmokeButtonSize / 2 - _font16px.MeasureString(SmokeText).X / 2,
             UIConstants.SmokeButtonSize * 11 / 10);
 
-        //            ScreenManager.Game.Components.Add(smokeButtonScorebar);
+        ScreenManager.Game.Components.Add(_smokeButtonScorebar);
 
         //            // Creates the BeeKeeper
         //            beeKeeper = new BeeKeeper(ScreenManager.Game, this);

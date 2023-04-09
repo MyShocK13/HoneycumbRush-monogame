@@ -13,8 +13,8 @@ public class HoneycumbRush : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
 
-        _graphics.PreferredBackBufferWidth = 800;
-        _graphics.PreferredBackBufferHeight = 480;
+        _graphics.PreferredBackBufferWidth = 1600;
+        _graphics.PreferredBackBufferHeight = 960;
 
         _graphics.IsFullScreen = false;
         IsMouseVisible = true;

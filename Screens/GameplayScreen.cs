@@ -128,7 +128,7 @@ public class GameplayScreen : GameScreen
         _smokeButtonPosition = new Vector2(664, 346);
         //            controlstickStartupPosition = new Vector2(55, 369);
 
-        //            IsInMotion = false;
+        //IsInMotion = false;
         _isAtStartupCountDown = true;
         //            isLevelEnd = false;
 
@@ -293,11 +293,11 @@ public class GameplayScreen : GameScreen
         //                return;
         //            }
 
-        //            if (!(IsActive && IsStarted))
-        //            {
-        //                base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-        //                return;
-        //            }
+        if (!(IsActive && IsStarted))
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+            return;
+        }
 
         //            // Show all diagnostic counters
         //            debugSystem.FpsCounter.Visible = showDebugInfo;
@@ -310,7 +310,7 @@ public class GameplayScreen : GameScreen
         //            HandleThumbStick();
         //#endif
 
-        //            HandleSmoke();
+        HandleSmoke();
 
         //            HandleCollision(gameTime);
 
@@ -1020,35 +1020,35 @@ public class GameplayScreen : GameScreen
     //            }
     //        }
 
-    //        /// <summary>
-    //        /// Handle smoke logic.
-    //        /// </summary>
-    //        private void HandleSmoke()
-    //        {
-    //            // If not currently shooting, refill the gun
-    //            if (!_isSmokebuttonClicked)
-    //            {
-    //                smokeButtonScorebar.IncreaseCurrentValue(
-    //                    ConfigurationManager.ModesConfiguration[gameDifficultyLevel].IncreaseAmountSpeed);
+    /// <summary>
+    /// Handle smoke logic.
+    /// </summary>
+    private void HandleSmoke()
+    {
+        // If not currently shooting, refill the gun
+        if (!_isSmokebuttonClicked)
+        {
+            //_smokeButtonScorebar.IncreaseCurrentValue(ConfigurationManager.ModesConfiguration[_gameDifficultyLevel].IncreaseAmountSpeed);
+            _smokeButtonScorebar.IncreaseCurrentValue(1);
 
-    //                beeKeeper.IsShootingSmoke = false;
-    //            }
-    //            else
-    //            {
-    //                // Check that the gun is not empty
-    //                if (smokeButtonScorebar.CurrentValue <= smokeButtonScorebar.MinValue)
-    //                {
-    //                    beeKeeper.IsShootingSmoke = false;
-    //                }
-    //                else
-    //                {
-    //                    beeKeeper.IsShootingSmoke = true;
+            _beeKeeper.IsShootingSmoke = false;
+        }
+        else
+        {
+            // Check that the gun is not empty
+            if (_smokeButtonScorebar.CurrentValue <= _smokeButtonScorebar.MinValue)
+            {
+                _beeKeeper.IsShootingSmoke = false;
+            }
+            else
+            {
+                _beeKeeper.IsShootingSmoke = true;
 
-    //                    smokeButtonScorebar.DecreaseCurrentValue(
-    //                        ConfigurationManager.ModesConfiguration[gameDifficultyLevel].DecreaseAmountSpeed);
-    //                }
-    //            }
-    //        }
+                //_smokeButtonScorebar.DecreaseCurrentValue(ConfigurationManager.ModesConfiguration[_gameDifficultyLevel].DecreaseAmountSpeed);
+                _smokeButtonScorebar.DecreaseCurrentValue(2);
+            }
+        }
+    }
 
     //        /// <summary>
     //        /// Checks whether the current game is over, and if so performs the necessary actions.

@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../MonoGame-Samples-master/HoneycombRush/Content/Textures/SmokeAnimationStrip.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../MonoGame-Samples-master/HoneycombRush/Content/Textures/SmokeAnimationStrip.png;Textures/SmokeAnimationStrip.png
+
 #begin Fonts/GameScreenFont14px.spritefont
 /copy:Fonts/GameScreenFont14px.spritefont
 
@@ -256,6 +268,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/shooting.png
 
+#begin Textures/Smoke.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Smoke.png
+
 #begin Textures/SmokeAnimationStrip.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -279,6 +303,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/smokeBtn.png
+
+#begin Textures/smokePuff.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/smokePuff.png
 
 #begin Textures/SoldierBeeWingFlap.png
 /importer:TextureImporter

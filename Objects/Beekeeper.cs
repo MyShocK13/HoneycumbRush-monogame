@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace HoneycombRush;
 
@@ -39,8 +40,8 @@ public class BeeKeeper : TexturedDrawableGameComponent
     private SpriteEffects _lastEffect;
     private SpriteEffects _currentEffect;
 
-    //    // Beekeeper state variables
-    //    bool needToShootSmoke;
+    // Beekeeper state variables
+    private bool _needToShootSmoke;
     private bool _isStung;
     //    bool isFlashing;
     //    bool isDrawnLastStungInterval;
@@ -51,20 +52,20 @@ public class BeeKeeper : TexturedDrawableGameComponent
     //    TimeSpan flashingDuration;
     //    TimeSpan depositHoneyUpdatingInterval = TimeSpan.FromMilliseconds(200);
     //    TimeSpan depositHoneyUpdatingTimer = TimeSpan.Zero;
-    //    TimeSpan shootSmokePuffTimer = TimeSpan.Zero;
-    //    readonly TimeSpan shootSmokePuffTimerInitialValue = TimeSpan.FromMilliseconds(325);
+    private TimeSpan _shootSmokePuffTimer = TimeSpan.Zero;
+    private readonly TimeSpan _shootSmokePuffTimerInitialValue = TimeSpan.FromMilliseconds(325);
 
-    //    Texture2D smokeAnimationTexture;
-    //    Texture2D smokePuffTexture;
-    //    const int MaxSmokePuffs = 20;
-    //    /// <summary>
-    //    /// Contains all smoke puffs which are currently active
-    //    /// </summary>
-    //    public Queue<SmokePuff> FiredSmokePuffs { get; private set; }
-    //    /// <summary>
-    //    /// Serves as a pool of available smoke puff objects.
-    //    /// </summary>
-    //    Stack<SmokePuff> availableSmokePuffs;
+    //private Texture2D _smokeAnimationTexture;
+    private Texture2D _smokePuffTexture;
+    private const int MaxSmokePuffs = 20;
+    /// <summary>
+    /// Contains all smoke puffs which are currently active
+    /// </summary>
+    public Queue<SmokePuff> FiredSmokePuffs { get; private set; }
+    /// <summary>
+    /// Serves as a pool of available smoke puff objects.
+    /// </summary>
+    private Stack<SmokePuff> _availableSmokePuffs;
 
     //    int stungDrawingInterval = 5;
     //    int stungDrawingCounter = 0;
@@ -94,27 +95,28 @@ public class BeeKeeper : TexturedDrawableGameComponent
     //        }
     //    }
 
-    //    /// <summary>
-    //    /// Mark the beekeeper as shooting or not shooting smoke.
-    //    /// </summary>        
-    //    public bool IsShootingSmoke
-    //    {
-    //        set
-    //        {
-    //            if (!_isStung)
-    //            {
-    //                needToShootSmoke = value;
-    //                if (value)
-    //                {
-    //                    AudioManager.PlaySound("SmokeGun_Loop");
-    //                }
-    //                else
-    //                {
-    //                    shootSmokePuffTimer = TimeSpan.Zero;
-    //                }
-    //            }
-    //        }
-    //    }
+    /// <summary>
+    /// Mark the beekeeper as shooting or not shooting smoke.
+    /// </summary>        
+    public bool IsShootingSmoke
+    {
+        set
+        {
+            if (!_isStung)
+            {
+                _needToShootSmoke = value;
+                if (value)
+                {
+                    Debug.WriteLine("Shooting smoke");
+                    //AudioManager.PlaySound("SmokeGun_Loop");
+                }
+                else
+                {
+                    _shootSmokePuffTimer = TimeSpan.Zero;
+                }
+            }
+        }
+    }
 
     public override Rectangle Bounds
     {
@@ -192,24 +194,24 @@ public class BeeKeeper : TexturedDrawableGameComponent
         //        stungDuration = TimeSpan.FromSeconds(1);
         //        flashingDuration = TimeSpan.FromSeconds(2);
 
-        //        availableSmokePuffs = new Stack<SmokePuff>(MaxSmokePuffs);
-        //        FiredSmokePuffs = new Queue<SmokePuff>(MaxSmokePuffs);
+        _availableSmokePuffs = new Stack<SmokePuff>(MaxSmokePuffs);
+        FiredSmokePuffs = new Queue<SmokePuff>(MaxSmokePuffs);
 
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        //        smokeAnimationTexture = Game.Content.Load<Texture2D>("Textures/SmokeAnimationStrip");
-        //        smokePuffTexture = Game.Content.Load<Texture2D>("Textures/SmokePuff");
+        //_smokeAnimationTexture = Game.Content.Load<Texture2D>("Textures/SmokeAnimationStrip");
+        _smokePuffTexture = Game.Content.Load<Texture2D>("Textures/SmokePuff");
         _position = new Vector2(Game.GraphicsDevice.Viewport.Width / 2 - (int)_bodySize.X / 2,
                                Game.GraphicsDevice.Viewport.Height / 2 - (int)_bodySize.Y / 2);
 
-        //        // Create smoke puffs for the smoke puff pool
-        //        for (int i = 0; i < MaxSmokePuffs; i++)
-        //        {
-        //            availableSmokePuffs.Push(new SmokePuff(Game, gamePlayScreen, smokePuffTexture));
-        //        }
+        // Create smoke puffs for the smoke puff pool
+        for (int i = 0; i < MaxSmokePuffs; i++)
+        {
+            _availableSmokePuffs.Push(new SmokePuff(Game, _gamePlayScreen, _smokePuffTexture));
+        }
 
         base.LoadContent();
     }
@@ -253,11 +255,11 @@ public class BeeKeeper : TexturedDrawableGameComponent
         //            AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].Update(gameTime, true);
         //        }
 
-        //        // The oldest smoke puff might have expired and should therefore be recycled
-        //        if ((FiredSmokePuffs.Count > 0) && (FiredSmokePuffs.Peek().IsGone))
-        //        {
-        //            availableSmokePuffs.Push(FiredSmokePuffs.Dequeue());
-        //        }
+        // The oldest smoke puff might have expired and should therefore be recycled
+        if ((FiredSmokePuffs.Count > 0) && (FiredSmokePuffs.Peek().IsGone))
+        {
+            _availableSmokePuffs.Push(FiredSmokePuffs.Dequeue());
+        }
 
         //        // If the beeKeeper is stung by a bee we want to create a flashing 
         //        // effect. 
@@ -289,17 +291,17 @@ public class BeeKeeper : TexturedDrawableGameComponent
         AnimationDefinitions[LegAnimationKey].Update(gameTime, IsInMotion);
         //        }
 
-        //        if (needToShootSmoke)
-        //        {
-        //            AnimationDefinitions[SmokeAnimationKey].Update(gameTime, needToShootSmoke);
+        if (_needToShootSmoke)
+        {
+            AnimationDefinitions[SmokeAnimationKey].Update(gameTime, _needToShootSmoke);
 
-        //            shootSmokePuffTimer -= gameTime.ElapsedGameTime;
-        //            if (shootSmokePuffTimer <= TimeSpan.Zero)
-        //            {
-        //                ShootSmoke();
-        //                shootSmokePuffTimer = shootSmokePuffTimerInitialValue;
-        //            }
-        //        }
+            _shootSmokePuffTimer -= gameTime.ElapsedGameTime;
+            if (_shootSmokePuffTimer <= TimeSpan.Zero)
+            {
+                ShootSmoke();
+                _shootSmokePuffTimer = _shootSmokePuffTimerInitialValue;
+            }
+        }
 
         base.Update(gameTime);
     }
@@ -415,22 +417,21 @@ public class BeeKeeper : TexturedDrawableGameComponent
         AnimationDefinitions[LegAnimationKey].Draw(_spriteBatch, _position, 1f, SpriteEffects.None);
 
 
-        //        if (needToShootSmoke)
-        //        {
-        //            // Draw the body
-        //            AnimationDefinitions[ShootingAnimationKey].Draw(scaledSpriteBatch, position, 1f, SpriteEffects.None);
+        if (_needToShootSmoke)
+        {
+            // Draw the body
+            AnimationDefinitions[ShootingAnimationKey].Draw(_spriteBatch, _position, 1f, SpriteEffects.None);
 
-        //            // If true we need to draw smoke
-        //            if (_smokeAdjustment != Vector2.Zero)
-        //            {
-        //                AnimationDefinitions[SmokeAnimationKey].Draw(scaledSpriteBatch, position + _smokeAdjustment, 1f,
-        //                    _currentEffect);
-        //            }
-        //        }
-        //        else
-        //        {
-        AnimationDefinitions[BodyAnimationKey].Draw(_spriteBatch, _position, 1f, SpriteEffects.None);
-        //        }
+            // If true we need to draw smoke
+            if (_smokeAdjustment != Vector2.Zero)
+            {
+                AnimationDefinitions[SmokeAnimationKey].Draw(_spriteBatch, _position + _smokeAdjustment, 1f, _currentEffect);
+            }
+        }
+        else
+        {
+                AnimationDefinitions[BodyAnimationKey].Draw(_spriteBatch, _position, 1f, SpriteEffects.None);
+        }
         _spriteBatch.End();
 
         base.Draw(gameTime);
@@ -472,7 +473,7 @@ public class BeeKeeper : TexturedDrawableGameComponent
     //            _isStung = true;
     //            isFlashing = true;
     //            stungTime = occurTime;
-    //            needToShootSmoke = false;
+    //            _needToShootSmoke = false;
     //        }
     //    }
 
@@ -532,72 +533,72 @@ public class BeeKeeper : TexturedDrawableGameComponent
     //    #region Private Methods
 
 
-    //    /// <summary>
-    //    /// Shoots a puff of smoke. If too many puffs of smoke have already been fired, the oldest one vanishes and
-    //    /// is replaced with a new one.        
-    //    /// </summary>
-    //    private void ShootSmoke()
-    //    {
-    //        SmokePuff availableSmokePuff;
+    /// <summary>
+    /// Shoots a puff of smoke. If too many puffs of smoke have already been fired, the oldest one vanishes and
+    /// is replaced with a new one.        
+    /// </summary>
+    private void ShootSmoke()
+    {
+        SmokePuff availableSmokePuff;
 
-    //        if (availableSmokePuffs.Count > 0)
-    //        {
-    //            // Take a smoke puff from the pool
-    //            availableSmokePuff = availableSmokePuffs.Pop();
-    //        }
-    //        else
-    //        {
-    //            // Take the oldest smoke puff and use it
-    //            availableSmokePuff = FiredSmokePuffs.Dequeue();
-    //        }
+        if (_availableSmokePuffs.Count > 0)
+        {
+            // Take a smoke puff from the pool
+            availableSmokePuff = _availableSmokePuffs.Pop();
+        }
+        else
+        {
+            // Take the oldest smoke puff and use it
+            availableSmokePuff = FiredSmokePuffs.Dequeue();
+        }
 
-    //        Vector2 beeKeeperCenter = Bounds.Center.GetVector();
-    //        Vector2 smokeInitialPosition = beeKeeperCenter;
+        Vector2 beeKeeperCenter = Bounds.Center.GetVector();
+        Vector2 smokeInitialPosition = beeKeeperCenter;
 
-    //        availableSmokePuff.Fire(smokeInitialPosition, GetSmokeVelocityVector());
-    //        FiredSmokePuffs.Enqueue(availableSmokePuff);
-    //    }
+        availableSmokePuff.Fire(smokeInitialPosition, GetSmokeVelocityVector());
+        FiredSmokePuffs.Enqueue(availableSmokePuff);
+    }
 
-    //    /// <summary>
-    //    /// Used to return a vector which will serve as shot smoke velocity.
-    //    /// </summary>
-    //    /// <returns>A vector which serves as the initial velocity of smoke puffs being shot.</returns>
-    //    private Vector2 GetSmokeVelocityVector()
-    //    {
-    //        Vector2 initialVector;
+    /// <summary>
+    /// Used to return a vector which will serve as shot smoke velocity.
+    /// </summary>
+    /// <returns>A vector which serves as the initial velocity of smoke puffs being shot.</returns>
+    private Vector2 GetSmokeVelocityVector()
+    {
+        Vector2 initialVector;
 
-    //        switch (direction)
-    //        {
-    //            case WalkingDirection.Down:
-    //                initialVector = new Vector2(0, 1);
-    //                break;
-    //            case WalkingDirection.Up:
-    //                initialVector = new Vector2(0, -1);
-    //                break;
-    //            case WalkingDirection.Left:
-    //                initialVector = new Vector2(-1, 0);
-    //                break;
-    //            case WalkingDirection.Right:
-    //                initialVector = new Vector2(1, 0);
-    //                break;
-    //            case WalkingDirection.LeftDown:
-    //                initialVector = new Vector2(-1, 1);
-    //                break;
-    //            case WalkingDirection.RightDown:
-    //                initialVector = new Vector2(1, 1);
-    //                break;
-    //            case WalkingDirection.LeftUp:
-    //                initialVector = new Vector2(-1, -1);
-    //                break;
-    //            case WalkingDirection.RightUp:
-    //                initialVector = new Vector2(1, -1);
-    //                break;
-    //            default:
-    //                throw new InvalidOperationException("Determining the vector for an invalid walking direction");
-    //        }
+        switch (_direction)
+        {
+            case WalkingDirection.Down:
+                initialVector = new Vector2(0, 1);
+                break;
+            case WalkingDirection.Up:
+                initialVector = new Vector2(0, -1);
+                break;
+            case WalkingDirection.Left:
+                initialVector = new Vector2(-1, 0);
+                break;
+            case WalkingDirection.Right:
+                initialVector = new Vector2(1, 0);
+                break;
+            case WalkingDirection.LeftDown:
+                initialVector = new Vector2(-1, 1);
+                break;
+            case WalkingDirection.RightDown:
+                initialVector = new Vector2(1, 1);
+                break;
+            case WalkingDirection.LeftUp:
+                initialVector = new Vector2(-1, -1);
+                break;
+            case WalkingDirection.RightUp:
+                initialVector = new Vector2(1, -1);
+                break;
+            default:
+                throw new InvalidOperationException("Determining the vector for an invalid walking direction");
+        }
 
-    //        return initialVector * 2f + _velocity * 1f;
-    //    }
+        return initialVector * 2f + _velocity * 1f;
+    }
 
     /// <summary>
     /// Returns an effect appropriate to the supplied vector which either does nothing or flips the beekeeper horizontally.
@@ -700,8 +701,7 @@ public class BeeKeeper : TexturedDrawableGameComponent
     /// <param name="movement">Vector indicating the current beekeeper movement.</param>      
     /// <param name="tempDirection">Enum describing the input direction.</param>
     /// <param name="_smokeAdjustment">Adjustment to smoke position according to input direction.</param>
-    private void DetermineDirectionDominantY(Vector2 movement, ref WalkingDirection tempDirection,
-        ref Vector2 _smokeAdjustment)
+    private void DetermineDirectionDominantY(Vector2 movement, ref WalkingDirection tempDirection, ref Vector2 _smokeAdjustment)
     {
         if (movement.Y > 0)
         {
@@ -740,7 +740,4 @@ public class BeeKeeper : TexturedDrawableGameComponent
             }
         }
     }
-
-
-    //    #endregion
 }

@@ -13,4 +13,14 @@ public static class ExtensionMethods
     {
         return new Vector2(rect.X, rect.Y);
     }
+
+    /// <summary>
+    /// Returns a vector pointing to the specified point.
+    /// </summary>
+    /// <param name="point">The point for which to produce the vector.</param>
+    /// <returns>A vector pointing to the specified point.</returns>
+    public static Vector2 GetVector(this Point point)
+    {
+        return new Vector2(point.X, point.Y);
+    }
 }

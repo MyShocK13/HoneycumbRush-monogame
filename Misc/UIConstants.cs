@@ -14,10 +14,10 @@ static class UIConstants
     /// <param name="scaleVector">Vector depicting the scale used.</param>
     public static void SetScale(Vector2 scaleVector)
     {
-        //            BeehiveLeftMargin = 130 * scaleVector.X;
-        //            BeehiveRightMargin = 130 * scaleVector.X;
-        //            BeehiveTopMargin = 30 * scaleVector.Y;
-        //            BeehiveMiddleOffset = 70 * scaleVector.Y;
+        BeehiveLeftMargin = 130 * scaleVector.X;
+        BeehiveRightMargin = 130 * scaleVector.X;
+        BeehiveTopMargin = 30 * scaleVector.Y;
+        BeehiveMiddleOffset = 70 * scaleVector.Y;
 
         HoneyJarTopMargin = 12 * scaleVector.Y;
         HoneyJarLeftMargin = 30 * scaleVector.Y;
@@ -45,13 +45,13 @@ static class UIConstants
         //            HighScoreEvenVerticalJump = 69 * scaleVector.Y;
     }
 
-    //        public static float BeehiveLeftMargin { get; private set; }
-    //        public static float BeehiveRightMargin { get; private set; }
-    //        public static float BeehiveTopMargin { get; private set; }
-    //        /// <summary>
-    //        /// An additional offset used for positioning the bottom two beehives.
-    //        /// </summary>
-    //        public static float BeehiveMiddleOffset { get; private set; }
+    public static float BeehiveLeftMargin { get; private set; }
+    public static float BeehiveRightMargin { get; private set; }
+    public static float BeehiveTopMargin { get; private set; }
+    /// <summary>
+    /// An additional offset used for positioning the bottom two beehives.
+    /// </summary>
+    public static float BeehiveMiddleOffset { get; private set; }
 
     public static float HoneyJarTopMargin { get; private set; }
     public static float HoneyJarLeftMargin { get; private set; }

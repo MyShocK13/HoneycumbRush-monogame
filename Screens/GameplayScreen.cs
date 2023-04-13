@@ -15,6 +15,8 @@ public class GameplayScreen : GameScreen
     private const string SmokeText = "Smoke";
 
     private Dictionary<string, ScaledAnimation> _animations;
+    private List<Beehive> _beehives = new List<Beehive>();
+    private List<Bee> _bees = new List<Bee>();
 
     private SpriteFont _font16px;
     private SpriteFont _font36px;
@@ -45,6 +47,9 @@ public class GameplayScreen : GameScreen
     private bool _isSmokebuttonClicked;
     private bool _isInMotion;
     private int _arrowCounter;
+
+    private int _amountOfSoldierBee;
+    private int _amountOfWorkerBee;
     private TimeSpan _startScreenTime;
 
 
@@ -58,11 +63,8 @@ public class GameplayScreen : GameScreen
     //        bool userInputToExit;
 
 
-    //        int amountOfSoldierBee;
-    //        int amountOfWorkerBee;
 
-    //        List<Beehive> beehives = new List<Beehive>();
-    //        List<Bee> bees = new List<Bee>();
+
 
 
     //        TimeSpan gameElapsed;
@@ -98,11 +100,6 @@ public class GameplayScreen : GameScreen
     //        Rectangle deviceUpperRightCorner = new Rectangle(750, 0, 50, 50);
 
     //        public static int FinalScore;
-
-
-    //        #endregion
-
-    //        #region Initializations
 
     public GameplayScreen(DifficultyMode gameDifficultyMode)
     {
@@ -547,8 +544,8 @@ public class GameplayScreen : GameScreen
         _jar = new HoneyJar(ScreenManager.Game, this, jarTexture, honeyJarLocation, scoreBar);
         ScreenManager.Game.Components.Add(_jar);
 
-        //            // Create all the beehives and the bees
-        //            CreateBeehives(safeArea, jar);
+        // Create all the beehives and the bees
+        CreateBeehives(safeArea, _jar);
 
         // We only initialize the smoke button position here since we need access
         // to the screen manager in order to do so (and it is null in the 
@@ -602,76 +599,67 @@ public class GameplayScreen : GameScreen
         scoreBar.DrawOrder = _vat.DrawOrder + 1;
     }
 
-    //        /// <summary>
-    //        /// Creates all the beehives and bees.
-    //        /// </summary>
-    //        private void CreateBeehives(Rectangle safeArea, HoneyJar jar)
-    //        {
-    //            Vector2 scaleVector = ScreenManager.SpriteBatch.ScaleVector;
+    /// <summary>
+    /// Creates all the beehives and bees.
+    /// </summary>
+    private void CreateBeehives(Rectangle safeArea, HoneyJar jar)
+    {
+        // Init position parameters
+        Vector2 scorebarPosition = new Vector2(_beehiveTexture.Width / 4, _beehiveTexture.Height * 9 / 10);
 
-    //            // Init position parameters
-    //            Vector2 scorebarPosition =
-    //                new Vector2(beehiveTexture.Width * scaleVector.X / 4, beehiveTexture.Height * scaleVector.Y * 9 / 10);
+        Vector2[] beehivePositions = new Vector2[5]
+        {
+            // top left
+            new Vector2(safeArea.Left + UIConstants.BeehiveLeftMargin, safeArea.Top + UIConstants.BeehiveTopMargin),
+            // top middle
+            new Vector2(safeArea.Center.X - _beehiveTexture.Width / 2, safeArea.Top + UIConstants.BeehiveTopMargin),
+            // top right
+            new Vector2(safeArea.Right - _beehiveTexture.Width - UIConstants.BeehiveRightMargin, safeArea.Top + UIConstants.BeehiveTopMargin),
+            // left
+            new Vector2(safeArea.Left + UIConstants.BeehiveLeftMargin, safeArea.Center.Y - _beehiveTexture.Height / 2 + UIConstants.BeehiveMiddleOffset),
+            // right
+            new Vector2(safeArea.Right - _beehiveTexture.Width - UIConstants.BeehiveRightMargin, safeArea.Center.Y - _beehiveTexture.Height / 2  + UIConstants.BeehiveMiddleOffset)
+        };
 
-    //            Vector2[] beehivePositions = new Vector2[5]
-    //            {
-    //                // top left
-    //                new Vector2(safeArea.Left + UIConstants.BeehiveLeftMargin,
-    //                    safeArea.Top + UIConstants.BeehiveTopMargin),
-    //                // top middle
-    //                new Vector2(safeArea.Center.X - beehiveTexture.Width * scaleVector.X / 2,
-    //                    safeArea.Top + UIConstants.BeehiveTopMargin),
-    //                // top right
-    //                new Vector2(safeArea.Right - beehiveTexture.Width * scaleVector.X - UIConstants.BeehiveRightMargin,
-    //                    safeArea.Top + UIConstants.BeehiveTopMargin),
-    //                // left
-    //                new Vector2(safeArea.Left + UIConstants.BeehiveLeftMargin,
-    //                    safeArea.Center.Y - beehiveTexture.Height * scaleVector.Y / 2 + UIConstants.BeehiveMiddleOffset),
-    //                // right
-    //                new Vector2(safeArea.Right - beehiveTexture.Width * scaleVector.X - UIConstants.BeehiveRightMargin,
-    //                    safeArea.Center.Y - beehiveTexture.Height * scaleVector.Y / 2  + UIConstants.BeehiveMiddleOffset)
-    //                };
+        // Create the beehives
+        for (int beehiveCounter = 0; beehiveCounter < beehivePositions.Length; beehiveCounter++)
+        {
+            ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 100, beehivePositions[beehiveCounter] +
+                                    scorebarPosition, (int)(_beehiveTexture.Height / 10),
+                                    (int)(_beehiveTexture.Width / 2), Color.Green,
+                                    ScoreBar.ScoreBarOrientation.Horizontal, 100, this, false);
+            ScreenManager.Game.Components.Add(scoreBar);
 
-    //            // Create the beehives
-    //            for (int beehiveCounter = 0; beehiveCounter < beehivePositions.Length; beehiveCounter++)
-    //            {
-    //                ScoreBar scoreBar = new ScoreBar(ScreenManager.Game, 0, 100, beehivePositions[beehiveCounter] +
-    //                                        scorebarPosition, (int)(beehiveTexture.Height * scaleVector.Y / 10),
-    //                                        (int)(beehiveTexture.Width * scaleVector.X / 2), Color.Green,
-    //                                        ScoreBar.ScoreBarOrientation.Horizontal, 100, this, false);
-    //                ScreenManager.Game.Components.Add(scoreBar);
+            Beehive beehive = new Beehive(ScreenManager.Game, this, _beehiveTexture, scoreBar, beehivePositions[beehiveCounter]);
 
-    //                Beehive beehive =
-    //                    new Beehive(ScreenManager.Game, this, beehiveTexture, scoreBar, beehivePositions[beehiveCounter]);
+            beehive.AnimationDefinitions = _animations;
 
-    //                beehive.AnimationDefinitions = animations;
+            ScreenManager.Game.Components.Add(beehive);
+            _beehives.Add(beehive);
+            scoreBar.DrawOrder = beehive.DrawOrder;
+        }
 
-    //                ScreenManager.Game.Components.Add(beehive);
-    //                beehives.Add(beehive);
-    //                scoreBar.DrawOrder = beehive.DrawOrder;
-    //            }
+        for (int beehiveIndex = 0; beehiveIndex < beehivePositions.Length; beehiveIndex++)
+        {
+            // Create the Soldier bees
+            for (int SoldierBeeCounter = 0; SoldierBeeCounter < amountOfSoldierBee; SoldierBeeCounter++)
+            {
+                SoldierBee bee = new SoldierBee(ScreenManager.Game, this, _beehives[beehiveIndex]);
+                bee.AnimationDefinitions = _animations;
+                ScreenManager.Game.Components.Add(bee);
+                bees.Add(bee);
+            }
 
-    //            for (int beehiveIndex = 0; beehiveIndex < beehivePositions.Length; beehiveIndex++)
-    //            {
-    //                // Create the Soldier bees
-    //                for (int SoldierBeeCounter = 0; SoldierBeeCounter < amountOfSoldierBee; SoldierBeeCounter++)
-    //                {
-    //                    SoldierBee bee = new SoldierBee(ScreenManager.Game, this, beehives[beehiveIndex]);
-    //                    bee.AnimationDefinitions = animations;
-    //                    ScreenManager.Game.Components.Add(bee);
-    //                    bees.Add(bee);
-    //                }
-
-    //                // Creates the worker bees
-    //                for (int workerBeeCounter = 0; workerBeeCounter < amountOfWorkerBee; workerBeeCounter++)
-    //                {
-    //                    WorkerBee bee = new WorkerBee(ScreenManager.Game, this, beehives[beehiveIndex]);
-    //                    bee.AnimationDefinitions = animations;
-    //                    ScreenManager.Game.Components.Add(bee);
-    //                    bees.Add(bee);
-    //                }
-    //            }
-    //        }
+            // Creates the worker bees
+            for (int workerBeeCounter = 0; workerBeeCounter < amountOfWorkerBee; workerBeeCounter++)
+            {
+                WorkerBee bee = new WorkerBee(ScreenManager.Game, this, _beehives[beehiveIndex]);
+                bee.AnimationDefinitions = _animations;
+                ScreenManager.Game.Components.Add(bee);
+                bees.Add(bee);
+            }
+        }
+    }
 
     /// <summary>
     /// Loads all the necessary textures.

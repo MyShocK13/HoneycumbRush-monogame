@@ -43,7 +43,7 @@ public class BeeKeeper : TexturedDrawableGameComponent
     // Beekeeper state variables
     private bool _needToShootSmoke;
     private bool _isStung;
-    //    bool isFlashing;
+    private bool _isFlashing;
     //    bool isDrawnLastStungInterval;
     private bool _isDepositingHoney;
 
@@ -87,13 +87,13 @@ public class BeeKeeper : TexturedDrawableGameComponent
         }
     }
 
-    //    public bool IsFlashing
-    //    {
-    //        get
-    //        {
-    //            return isFlashing;
-    //        }
-    //    }
+    public bool IsFlashing
+    {
+        get
+        {
+            return _isFlashing;
+        }
+    }
 
     /// <summary>
     /// Mark the beekeeper as shooting or not shooting smoke.
@@ -435,30 +435,23 @@ public class BeeKeeper : TexturedDrawableGameComponent
         base.Draw(gameTime);
     }
 
+    /// <summary>
+    /// Checks if a given rectanlge intersects with one of the smoke puffs fired by the beekeeper.
+    /// </summary>
+    /// <param name="checkRectangle">The rectangle to check for collisions with smoke puffs.</param>
+    /// <returns>One of the smoke puffs with which the supplied regtangle collides, or null if it collides with none.</returns>
+    public SmokePuff CheckSmokeCollision(Rectangle checkRectangle)
+    {
+        foreach (SmokePuff smokePuff in FiredSmokePuffs)
+        {
+            if (checkRectangle.HasCollision(smokePuff.CentralCollisionArea))
+            {
+                return smokePuff;
+            }
+        }
 
-    //    #endregion
-
-    //    #region Public Methods
-
-
-    //    /// <summary>
-    //    /// Checks if a given rectanlge intersects with one of the smoke puffs fired by the beekeeper.
-    //    /// </summary>
-    //    /// <param name="checkRectangle">The rectangle to check for collisions with smoke puffs.</param>
-    //    /// <returns>One of the smoke puffs with which the supplied regtangle collides, or null if it collides with
-    //    /// none.</returns>
-    //    public SmokePuff CheckSmokeCollision(Rectangle checkRectangle)
-    //    {
-    //        foreach (SmokePuff smokePuff in FiredSmokePuffs)
-    //        {
-    //            if (checkRectangle.HasCollision(smokePuff.CentralCollisionArea))
-    //            {
-    //                return smokePuff;
-    //            }
-    //        }
-
-    //        return null;
-    //    }
+        return null;
+    }
 
     //    /// <summary>
     //    /// Maek the beekeeper as being stung by a bee.

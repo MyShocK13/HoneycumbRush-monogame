@@ -825,59 +825,57 @@ public class GameplayScreen : GameScreen
 
         bool hasCollisionWithVat = HandleVatCollision();
 
-        //HandleBeeInteractions(gameTime, hasCollisionWithVat, isCollectingHoney);
+        HandleBeeInteractions(gameTime, hasCollisionWithVat, isCollectingHoney);
     }
 
-    //        /// <summary>
-    //        /// Handle the interaction of the bees with other game components.
-    //        /// </summary>
-    //        /// <param name="gameTime">Game time information.</param>
-    //        /// <param name="isBeeKeeperCollideWithVat">Whether the beekeeper is currently touching the vat.</param>
-    //        /// <param name="isBeeKeeperCollideWithBeehive">Whether the beekeeper is currently touching a beehive.</param>
-    //        private void HandleBeeInteractions(GameTime gameTime, bool isBeeKeeperCollideWithVat,
-    //            bool isBeeKeeperCollideWithBeehive)
-    //        {
-    //            // Goes over all the bees
-    //            foreach (Bee bee in bees)
-    //            {
-    //                // Check for smoke collisions
-    //                SmokePuff intersectingPuff = beeKeeper.CheckSmokeCollision(bee.Bounds);
+    /// <summary>
+    /// Handle the interaction of the bees with other game components.
+    /// </summary>
+    /// <param name="gameTime">Game time information.</param>
+    /// <param name="isBeeKeeperCollideWithVat">Whether the beekeeper is currently touching the vat.</param>
+    /// <param name="isBeeKeeperCollideWithBeehive">Whether the beekeeper is currently touching a beehive.</param>
+    private void HandleBeeInteractions(GameTime gameTime, bool isBeeKeeperCollideWithVat, bool isBeeKeeperCollideWithBeehive)
+    {
+        // Goes over all the bees
+        foreach (Bee bee in _bees)
+        {
+            // Check for smoke collisions
+            SmokePuff intersectingPuff = _beeKeeper.CheckSmokeCollision(bee.Bounds);
 
-    //                if (intersectingPuff != null)
-    //                {
-    //                    bee.HitBySmoke(intersectingPuff);
-    //                }
+            if (intersectingPuff != null)
+            {
+                bee.HitBySmoke(intersectingPuff);
+            }
 
-    //                // Check for vat collision
-    //                if (vat.Bounds.HasCollision(bee.Bounds))
-    //                {
-    //                    bee.Collide(vat.Bounds);
-    //                }
-    //                // Check for beekeeper collision
-    //                if (beeKeeper.Bounds.HasCollision(bee.Bounds))
-    //                {
-    //                    if (!bee.IsBeeHit && !isBeeKeeperCollideWithVat && !beeKeeper.IsStung && !beeKeeper.IsFlashing &&
-    //                        !isBeeKeeperCollideWithBeehive)
-    //                    {
-    //                        jar.DecreaseHoneyByPercent(20);
-    //                        beeKeeper.Stung(gameTime.TotalGameTime);
-    //                        AudioManager.PlaySound("HoneyPotBreak");
-    //                        AudioManager.PlaySound("Stung");
-    //                    }
+            // Check for vat collision
+            if (_vat.Bounds.HasCollision(bee.Bounds))
+            {
+                bee.Collide(_vat.Bounds);
+            }
+            // Check for beekeeper collision
+            if (_beeKeeper.Bounds.HasCollision(bee.Bounds))
+            {
+                if (!bee.IsBeeHit && !isBeeKeeperCollideWithVat && !_beeKeeper.IsStung && !_beeKeeper.IsFlashing && !isBeeKeeperCollideWithBeehive)
+                {
+                    _jar.DecreaseHoneyByPercent(20);
+                    _beeKeeper.Stung(gameTime.TotalGameTime);
+                    //AudioManager.PlaySound("HoneyPotBreak");
+                    //AudioManager.PlaySound("Stung");
+                }
 
-    //                    bee.Collide(beeKeeper.Bounds);
-    //                }
-    //                // Soldier bee chase logic
-    //                if (bee is SoldierBee)
-    //                {
-    //                    SoldierBee SoldierBee = bee as SoldierBee;
-    //                    SoldierBee.DistanceFromBeeKeeper =
-    //                        (Vector2.Distance(beeKeeper.Bounds.GetVector(), SoldierBee.Bounds.GetVector()));
+                bee.Collide(beeKeeper.Bounds);
+            }
+            // Soldier bee chase logic
+            if (bee is SoldierBee)
+            {
+                SoldierBee SoldierBee = bee as SoldierBee;
+                SoldierBee.DistanceFromBeeKeeper =
+                    (Vector2.Distance(beeKeeper.Bounds.GetVector(), SoldierBee.Bounds.GetVector()));
 
-    //                    SoldierBee.BeeKeeperVector = beeKeeper.Bounds.GetVector() - SoldierBee.Bounds.GetVector();
-    //                }
-    //            }
-    //        }
+                SoldierBee.BeeKeeperVector = beeKeeper.Bounds.GetVector() - SoldierBee.Bounds.GetVector();
+            }
+        }
+    }
 
     /// <summary>
     /// Handle the beekeeper's collision with the vat component.

@@ -89,7 +89,7 @@ public class Beehive : TexturedDrawableGameComponent
     /// <param name="gameTime">Game time information.</param>
     public override void Update(GameTime gameTime)
     {
-        if (!gamePlayScreen.IsActive)
+        if (!_gamePlayScreen.IsActive)
         {
             base.Update(gameTime);
             return;
@@ -114,42 +114,27 @@ public class Beehive : TexturedDrawableGameComponent
         base.Update(gameTime);
     }
 
-
-    #endregion
-
-    #region Render
-
-
     /// <summary>
     /// Render the beehive.
     /// </summary>
     /// <param name="gameTime">Game time information.</param>
     public override void Draw(GameTime gameTime)
     {
-        if (!gamePlayScreen.IsActive)
+        if (!_gamePlayScreen.IsActive)
         {
             base.Draw(gameTime);
             return;
         }
 
-        scaledSpriteBatch.Begin();
-        scaledSpriteBatch.Draw(texture, position, Color.White);
-        scaledSpriteBatch.End();
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(_texture, _position, Color.White);
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
-
-
-    #endregion
-
-    #region Public methods
-
 
     public void DecreaseHoney(int amount)
     {
         _score.DecreaseCurrentValue(amount);
     }
-
-
-    #endregion
 }

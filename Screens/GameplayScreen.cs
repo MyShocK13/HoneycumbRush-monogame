@@ -118,8 +118,8 @@ public class GameplayScreen : GameScreen
         _gameDifficultyLevel = gameDifficultyMode;
         //            gameElapsed = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].GameElapsed;
 
-        //            amountOfSoldierBee = 4;
-        //            amountOfWorkerBee = 16;
+        _amountOfSoldierBee = 4;
+        _amountOfWorkerBee = 16;
 
         //            controlstickBoundaryPosition = new Vector2(34, 347);
         _smokeButtonPosition = new Vector2(664, 346);
@@ -642,21 +642,21 @@ public class GameplayScreen : GameScreen
         for (int beehiveIndex = 0; beehiveIndex < beehivePositions.Length; beehiveIndex++)
         {
             // Create the Soldier bees
-            for (int SoldierBeeCounter = 0; SoldierBeeCounter < amountOfSoldierBee; SoldierBeeCounter++)
+            for (int SoldierBeeCounter = 0; SoldierBeeCounter < _amountOfSoldierBee; SoldierBeeCounter++)
             {
                 SoldierBee bee = new SoldierBee(ScreenManager.Game, this, _beehives[beehiveIndex]);
                 bee.AnimationDefinitions = _animations;
                 ScreenManager.Game.Components.Add(bee);
-                bees.Add(bee);
+                _bees.Add(bee);
             }
 
             // Creates the worker bees
-            for (int workerBeeCounter = 0; workerBeeCounter < amountOfWorkerBee; workerBeeCounter++)
+            for (int workerBeeCounter = 0; workerBeeCounter < _amountOfWorkerBee; workerBeeCounter++)
             {
                 WorkerBee bee = new WorkerBee(ScreenManager.Game, this, _beehives[beehiveIndex]);
                 bee.AnimationDefinitions = _animations;
                 ScreenManager.Game.Components.Add(bee);
-                bees.Add(bee);
+                _bees.Add(bee);
             }
         }
     }

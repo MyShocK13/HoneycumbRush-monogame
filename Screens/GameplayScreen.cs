@@ -821,7 +821,7 @@ public class GameplayScreen : GameScreen
     {
         bool isCollectingHoney = HandleBeeKeeperBeehiveCollision();
 
-        //HandleSmokeBeehiveCollision();
+        HandleSmokeBeehiveCollision();
 
         bool hasCollisionWithVat = HandleVatCollision();
 
@@ -969,24 +969,24 @@ public class GameplayScreen : GameScreen
         return isCollidingWithBeehive;
     }
 
-    //        /// <summary>
-    //        /// Handle the smoke puff collision with beehive components.
-    //        /// </summary>
-    //        /// <remarks>Only disables bee regeneration, as it assumes that it will be enabled by 
-    //        /// <see cref="HandleBeeKeeperBeehiveCollision"/></remarks>
-    //        private void HandleSmokeBeehiveCollision()
-    //        {
-    //            foreach (Beehive beehive in beehives)
-    //            {
-    //                foreach (SmokePuff smokePuff in beeKeeper.FiredSmokePuffs)
-    //                {
-    //                    if (beehive.Bounds.HasCollision(smokePuff.CentralCollisionArea))
-    //                    {
-    //                        beehive.AllowBeesToGenerate = false;
-    //                    }
-    //                }
-    //            }
-    //        }
+    /// <summary>
+    /// Handle the smoke puff collision with beehive components.
+    /// </summary>
+    /// <remarks>Only disables bee regeneration, as it assumes that it will be enabled by 
+    /// <see cref="HandleBeeKeeperBeehiveCollision"/></remarks>
+    private void HandleSmokeBeehiveCollision()
+    {
+        foreach (Beehive beehive in _beehives)
+        {
+            foreach (SmokePuff smokePuff in _beeKeeper.FiredSmokePuffs)
+            {
+                if (beehive.Bounds.HasCollision(smokePuff.CentralCollisionArea))
+                {
+                    beehive.AllowBeesToGenerate = false;
+                }
+            }
+        }
+    }
 
     //        /// <summary>
     //        /// Sets an internal value which determines whether or not to display an arrow above the vat.

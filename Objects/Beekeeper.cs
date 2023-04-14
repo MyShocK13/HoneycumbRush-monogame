@@ -44,12 +44,12 @@ public class BeeKeeper : TexturedDrawableGameComponent
     private bool _needToShootSmoke;
     private bool _isStung;
     private bool _isFlashing;
-    //    bool isDrawnLastStungInterval;
+    private bool _isDrawnLastStungInterval;
     private bool _isDepositingHoney;
 
-    //    TimeSpan stungTime;
-    //    TimeSpan stungDuration;
-    //    TimeSpan flashingDuration;
+    private TimeSpan _stungTime;
+    private TimeSpan _stungDuration;
+    private TimeSpan _flashingDuration;
     private TimeSpan _depositHoneyUpdatingInterval = TimeSpan.FromMilliseconds(200);
     private TimeSpan _depositHoneyUpdatingTimer = TimeSpan.Zero;
     private TimeSpan _shootSmokePuffTimer = TimeSpan.Zero;
@@ -67,8 +67,8 @@ public class BeeKeeper : TexturedDrawableGameComponent
     /// </summary>
     private Stack<SmokePuff> _availableSmokePuffs;
 
-    //    int stungDrawingInterval = 5;
-    //    int stungDrawingCounter = 0;
+    private int _stungDrawingInterval = 5;
+    private int _stungDrawingCounter = 0;
     private int _honeyDepositFrameCount;
     private int _depositHoneyTimerCounter = -1;
     private int _collectingHoneyFrameCounter;
@@ -191,8 +191,8 @@ public class BeeKeeper : TexturedDrawableGameComponent
         _bodySize = new Vector2(bodyAnimationFrameSize.X, bodyAnimationFrameSize.Y);
 
         _isStung = false;
-        //        stungDuration = TimeSpan.FromSeconds(1);
-        //        flashingDuration = TimeSpan.FromSeconds(2);
+        _stungDuration = TimeSpan.FromSeconds(1);
+        _flashingDuration = TimeSpan.FromSeconds(2);
 
         _availableSmokePuffs = new Stack<SmokePuff>(MaxSmokePuffs);
         FiredSmokePuffs = new Queue<SmokePuff>(MaxSmokePuffs);
@@ -224,25 +224,25 @@ public class BeeKeeper : TexturedDrawableGameComponent
             return;
         }
 
-        //        if (IsCollectingHoney)
-        //        {
-        //            // We want this animation to use a sub animation 
-        //            // So must calculate when to call the sub animation
-        //            if (_collectingHoneyFrameCounter > 3)
-        //            {
-        //                AnimationDefinitions[BeekeeperCollectingHoneyAnimationKey].Update(gameTime, true, true);
-        //            }
-        //            else
-        //            {
-        //                AnimationDefinitions[BeekeeperCollectingHoneyAnimationKey].Update(gameTime, true, false);
-        //            }
+        if (IsCollectingHoney)
+        {
+            // We want this animation to use a sub animation 
+            // So must calculate when to call the sub animation
+            if (_collectingHoneyFrameCounter > 3)
+            {
+                AnimationDefinitions[BeekeeperCollectingHoneyAnimationKey].Update(gameTime, true, true);
+            }
+            else
+            {
+                AnimationDefinitions[BeekeeperCollectingHoneyAnimationKey].Update(gameTime, true, false);
+            }
 
-        //            _collectingHoneyFrameCounter++;
-        //        }
-        //        else
-        //        {
-        _collectingHoneyFrameCounter = 0;
-        //        }
+            _collectingHoneyFrameCounter++;
+        }
+        else
+        {
+            _collectingHoneyFrameCounter = 0;
+        }
 
 
         if (_isDepositingHoney)
@@ -261,35 +261,35 @@ public class BeeKeeper : TexturedDrawableGameComponent
             _availableSmokePuffs.Push(FiredSmokePuffs.Dequeue());
         }
 
-        //        // If the beeKeeper is stung by a bee we want to create a flashing 
-        //        // effect. 
-        //        if (_isStung || isFlashing)
-        //        {
-        //            stungDrawingCounter++;
+        // If the beeKeeper is stung by a bee we want to create a flashing 
+        // effect. 
+        if (_isStung || _isFlashing)
+        {
+            _stungDrawingCounter++;
 
-        //            if (stungDrawingCounter > stungDrawingInterval)
-        //            {
-        //                stungDrawingCounter = 0;
-        //                isDrawnLastStungInterval = !isDrawnLastStungInterval;
-        //            }
-        //            // if time is up, end the flashing effect
-        //            if (stungTime + stungDuration < gameTime.TotalGameTime)
-        //            {
-        //                _isStung = false;
+            if (_stungDrawingCounter > _stungDrawingInterval)
+            {
+                _stungDrawingCounter = 0;
+                _isDrawnLastStungInterval = !_isDrawnLastStungInterval;
+            }
+            // if time is up, end the flashing effect
+            if (_stungTime + _stungDuration < gameTime.TotalGameTime)
+            {
+                _isStung = false;
 
-        //                if (stungTime + stungDuration + flashingDuration < gameTime.TotalGameTime)
-        //                {
-        //                    isFlashing = false;
-        //                    stungDrawingCounter = -1;
-        //                }
+                if (_stungTime + _stungDuration + _flashingDuration < gameTime.TotalGameTime)
+                {
+                    _isFlashing = false;
+                    _stungDrawingCounter = -1;
+                }
 
-        //                AnimationDefinitions[LegAnimationKey].Update(gameTime, IsInMotion);
-        //            }
-        //        }
-        //        else
-        //        {
-        AnimationDefinitions[LegAnimationKey].Update(gameTime, IsInMotion);
-        //        }
+                AnimationDefinitions[LegAnimationKey].Update(gameTime, IsInMotion);
+            }
+        }
+        else
+        {
+            AnimationDefinitions[LegAnimationKey].Update(gameTime, IsInMotion);
+        }
 
         if (_needToShootSmoke)
         {
@@ -314,36 +314,35 @@ public class BeeKeeper : TexturedDrawableGameComponent
             return;
         }
 
-        //        // Make sure not to draw the beekeeper while flashing
-        //        if (_isStung || isFlashing)
-        //        {
-        //            if (stungDrawingCounter != stungDrawingInterval)
-        //            {
-        //                if (isDrawnLastStungInterval)
-        //                {
-        //                    return;
-        //                }
-        //            }
-        //        }
+        // Make sure not to draw the beekeeper while flashing
+        if (_isStung || _isFlashing)
+        {
+            if (_stungDrawingCounter != _stungDrawingInterval)
+            {
+                if (_isDrawnLastStungInterval)
+                {
+                    return;
+                }
+            }
+        }
 
         _spriteBatch.Begin();
 
-        //        // if stung we want to show another animation
-        //        if (_isStung)
-        //        {
-        //            scaledSpriteBatch.Draw(Game.Content.Load<Texture2D>("Textures/hit"), position, Color.White);
-        //            scaledSpriteBatch.End();
-        //            return;
-        //        }
+        // if stung we want to show another animation
+        if (_isStung)
+        {
+            _spriteBatch.Draw(Game.Content.Load<Texture2D>("Textures/hit"), _position, Color.White);
+            _spriteBatch.End();
+            return;
+        }
 
-        //        // If collecting honey, draw the appropriate animation
-        //        if (IsCollectingHoney)
-        //        {
-        //            AnimationDefinitions[BeekeeperCollectingHoneyAnimationKey].Draw(scaledSpriteBatch, position,
-        //                SpriteEffects.None);
-        //            scaledSpriteBatch.End();
-        //            return;
-        //        }
+        // If collecting honey, draw the appropriate animation
+        if (IsCollectingHoney)
+        {
+            AnimationDefinitions[BeekeeperCollectingHoneyAnimationKey].Draw(_spriteBatch, _position, SpriteEffects.None);
+            _spriteBatch.End();
+            return;
+        }
 
 
         if (_isDepositingHoney)
@@ -354,8 +353,7 @@ public class BeeKeeper : TexturedDrawableGameComponent
                 //AudioManager.StopSound("DepositingIntoVat_Loop");
             }
 
-            // We want the deposit duration to sync with the deposit  
-            // animation
+            // We want the deposit duration to sync with the deposit animation
             // So we manage the timing ourselves
             if (_depositHoneyUpdatingTimer != TimeSpan.Zero && _depositHoneyUpdatingTimer + _depositHoneyUpdatingInterval < gameTime.TotalGameTime)
             {
@@ -453,20 +451,20 @@ public class BeeKeeper : TexturedDrawableGameComponent
         return null;
     }
 
-    //    /// <summary>
-    //    /// Maek the beekeeper as being stung by a bee.
-    //    /// </summary>
-    //    /// <param name="occurTime">The time at which the beekeeper was stung.</param>
-    //    public void Stung(TimeSpan occurTime)
-    //    {
-    //        if (!_isStung && !isFlashing)
-    //        {
-    //            _isStung = true;
-    //            isFlashing = true;
-    //            stungTime = occurTime;
-    //            _needToShootSmoke = false;
-    //        }
-    //    }
+    /// <summary>
+    /// Maek the beekeeper as being stung by a bee.
+    /// </summary>
+    /// <param name="occurTime">The time at which the beekeeper was stung.</param>
+    public void Stung(TimeSpan occurTime)
+    {
+        if (!_isStung && !_isFlashing)
+        {
+            _isStung = true;
+            _isFlashing = true;
+            _stungTime = occurTime;
+            _needToShootSmoke = false;
+        }
+    }
 
     /// <summary>
     /// Updates the beekeeper's position.

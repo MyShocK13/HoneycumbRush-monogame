@@ -780,38 +780,38 @@ public class GameplayScreen : GameScreen
         {
             Vector2 beekeeperCalculatedPosition = new Vector2(_beeKeeper.CentralCollisionArea.X, _beeKeeper.CentralCollisionArea.Y) + _movementVector;
 
-            //if (!CheckBeehiveCollision(beekeeperCalculatedPosition))
-            //{
-            _beeKeeper.SetMovement(_movementVector);
-            IsInMotion = true;
-            //}
+            if (!CheckBeehiveCollision(beekeeperCalculatedPosition))
+            {
+                _beeKeeper.SetMovement(_movementVector);
+                IsInMotion = true;
+            }
         }
 
         return _movementVector;
     }
 
-    //        /// <summary>
-    //        /// Checks if the beekeeper collides with a beehive.
-    //        /// </summary>
-    //        /// <param name="beekeeperPosition">The beekeeper's position.</param>
-    //        /// <returns>True if the beekeeper collides with a beehive and false otherwise.</returns>
-    //        private bool CheckBeehiveCollision(Vector2 beekeeperPosition)
-    //        {
-    //            // We do not use the beekeeper's collision area property as he has not actually moved at this point and
-    //            // is still in his previous position
-    //            Rectangle beekeeperTempCollisionArea = new Rectangle((int)beekeeperPosition.X, (int)beekeeperPosition.Y,
-    //                beeKeeper.CentralCollisionArea.Width, beeKeeper.CentralCollisionArea.Height);
+    /// <summary>
+    /// Checks if the beekeeper collides with a beehive.
+    /// </summary>
+    /// <param name="beekeeperPosition">The beekeeper's position.</param>
+    /// <returns>True if the beekeeper collides with a beehive and false otherwise.</returns>
+    private bool CheckBeehiveCollision(Vector2 beekeeperPosition)
+    {
+        // We do not use the beekeeper's collision area property as he has not actually moved at this point and
+        // is still in his previous position
+        Rectangle beekeeperTempCollisionArea = new Rectangle((int)beekeeperPosition.X, (int)beekeeperPosition.Y,
+            _beeKeeper.CentralCollisionArea.Width, _beeKeeper.CentralCollisionArea.Height);
 
-    //            foreach (Beehive currentBeehive in beehives)
-    //            {
-    //                if (beekeeperTempCollisionArea.Intersects(currentBeehive.CentralCollisionArea))
-    //                {
-    //                    return true;
-    //                }
-    //            }
+        foreach (Beehive currentBeehive in _beehives)
+        {
+            if (beekeeperTempCollisionArea.Intersects(currentBeehive.CentralCollisionArea))
+            {
+                return true;
+            }
+        }
 
-    //            return false;
-    //}
+        return false;
+    }
 
     /// <summary>
     /// Check for any of the possible collisions.
@@ -863,16 +863,15 @@ public class GameplayScreen : GameScreen
                     //AudioManager.PlaySound("Stung");
                 }
 
-                bee.Collide(beeKeeper.Bounds);
+                bee.Collide(_beeKeeper.Bounds);
             }
             // Soldier bee chase logic
             if (bee is SoldierBee)
             {
                 SoldierBee SoldierBee = bee as SoldierBee;
-                SoldierBee.DistanceFromBeeKeeper =
-                    (Vector2.Distance(beeKeeper.Bounds.GetVector(), SoldierBee.Bounds.GetVector()));
+                SoldierBee.DistanceFromBeeKeeper = (Vector2.Distance(_beeKeeper.Bounds.GetVector(), SoldierBee.Bounds.GetVector()));
 
-                SoldierBee.BeeKeeperVector = beeKeeper.Bounds.GetVector() - SoldierBee.Bounds.GetVector();
+                SoldierBee.BeeKeeperVector = _beeKeeper.Bounds.GetVector() - SoldierBee.Bounds.GetVector();
             }
         }
     }

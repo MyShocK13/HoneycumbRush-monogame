@@ -244,6 +244,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/deposit.png
 
+#begin Textures/hit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/hit.png
+
 #begin Textures/honeyJar.png
 /importer:TextureImporter
 /processor:TextureProcessor

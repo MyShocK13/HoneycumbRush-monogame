@@ -50,6 +50,7 @@ public class GameplayScreen : GameScreen
 
     private int _amountOfSoldierBee;
     private int _amountOfWorkerBee;
+    private TimeSpan _gameElapsed;
     private TimeSpan _startScreenTime;
 
 
@@ -67,7 +68,6 @@ public class GameplayScreen : GameScreen
 
 
 
-    //        TimeSpan gameElapsed;
 
 
 
@@ -116,7 +116,8 @@ public class GameplayScreen : GameScreen
         //            ConfigurationManager.DifficultyMode = gameDifficultyMode;
 
         _gameDifficultyLevel = gameDifficultyMode;
-        //            gameElapsed = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].GameElapsed;
+        //            _gameElapsed = ConfigurationManager.ModesConfiguration[gameDifficultyLevel]._gameElapsed;
+        _gameElapsed = TimeSpan.FromSeconds(120);
 
         _amountOfSoldierBee = 4;
         _amountOfWorkerBee = 16;
@@ -125,17 +126,12 @@ public class GameplayScreen : GameScreen
         _smokeButtonPosition = new Vector2(664, 346);
         //            controlstickStartupPosition = new Vector2(55, 369);
 
-        //IsInMotion = false;
+        IsInMotion = false;
         _isAtStartupCountDown = true;
         //            isLevelEnd = false;
 
         //            EnabledGestures = GestureType.Tap;
     }
-
-
-    //        #endregion
-
-    //        #region Loading and Unloading
 
     public override void LoadContent()
     {
@@ -301,7 +297,7 @@ public class GameplayScreen : GameScreen
         //            debugSystem.TimeRuler.Visible = showDebugInfo;
         //            debugSystem.TimeRuler.ShowLog = showDebugInfo;
 
-        //            gameElapsed -= gameTime.ElapsedGameTime;
+        _gameElapsed -= gameTime.ElapsedGameTime;
 
         //#if WINDOWS_PHONE
         //            HandleThumbStick();
@@ -330,17 +326,17 @@ public class GameplayScreen : GameScreen
         //                }
         //            }
 
-        //            if (gameElapsed.Minutes == 0 && gameElapsed.Seconds == 10)
+        //            if (_gameElapsed.Minutes == 0 && _gameElapsed.Seconds == 10)
         //            {
         //                AudioManager.PlaySound("10SecondCountDown");
         //            }
-        //            if (gameElapsed.Minutes == 0 && gameElapsed.Seconds == 30)
+        //            if (_gameElapsed.Minutes == 0 && _gameElapsed.Seconds == 30)
         //            {
         //                AudioManager.PlaySound("30SecondWarning");
         //            }
 
-        //            // Update the time remaining displayed on the vat
-        //            vat.DrawTimeLeft(gameElapsed);
+        // Update the time remaining displayed on the vat
+        _vat.DrawTimeLeft(_gameElapsed);
 
         base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
     }
@@ -1048,14 +1044,14 @@ public class GameplayScreen : GameScreen
     //            isUserWon = vat.CurrentVatCapacity >= vat.MaxVatCapacity;
 
     //            // If the vat is full, the player wins
-    //            if (isUserWon || gameElapsed <= TimeSpan.Zero)
+    //            if (isUserWon || _gameElapsed <= TimeSpan.Zero)
     //            {
     //                levelEnded = true;
 
     //                if (gameDifficultyLevel == DifficultyMode.Hard)
     //                {
     //                    FinalScore = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].HighScoreFactor
-    //                        * (int)gameElapsed.TotalMilliseconds;
+    //                        * (int)_gameElapsed.TotalMilliseconds;
     //                }
     //                else
     //                {
@@ -1064,7 +1060,7 @@ public class GameplayScreen : GameScreen
     //            }
 
     //            // if true, game is over
-    //            if (gameElapsed <= TimeSpan.Zero || levelEnded)
+    //            if (_gameElapsed <= TimeSpan.Zero || levelEnded)
     //            {
     //                isLevelEnd = true;
 

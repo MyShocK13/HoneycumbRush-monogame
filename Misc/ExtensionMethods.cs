@@ -23,4 +23,16 @@ public static class ExtensionMethods
     {
         return new Vector2(point.X, point.Y);
     }
+
+    /// <summary>
+    /// Check for collision between two rectangle.
+    /// </summary>
+    /// <param name="first">The first rectangle.</param>
+    /// <param name="second">The second rectangle.</param>
+    /// <returns>Returns true if the two rectangles collide, 
+    /// false otherwise.</returns>
+    public static bool HasCollision(this Rectangle first, Rectangle second)
+    {
+        return first.Intersects(second);
+    }
 }

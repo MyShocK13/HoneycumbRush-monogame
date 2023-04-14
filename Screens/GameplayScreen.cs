@@ -305,7 +305,7 @@ public class GameplayScreen : GameScreen
 
         HandleSmoke();
 
-        //            HandleCollision(gameTime);
+        HandleCollision(gameTime);
 
         //            HandleVatHoneyArrow();
 
@@ -813,20 +813,20 @@ public class GameplayScreen : GameScreen
     //            return false;
     //}
 
-    //        /// <summary>
-    //        /// Check for any of the possible collisions.
-    //        /// </summary>
-    //        /// <param name="gameTime">Game time information.</param>
-    //        private void HandleCollision(GameTime gameTime)
-    //        {
-    //            bool isCollectingHoney = HandleBeeKeeperBeehiveCollision();
+    /// <summary>
+    /// Check for any of the possible collisions.
+    /// </summary>
+    /// <param name="gameTime">Game time information.</param>
+    private void HandleCollision(GameTime gameTime)
+    {
+        bool isCollectingHoney = HandleBeeKeeperBeehiveCollision();
 
-    //            HandleSmokeBeehiveCollision();
+        //HandleSmokeBeehiveCollision();
 
-    //            bool hasCollisionWithVat = HandleVatCollision();
+        bool hasCollisionWithVat = HandleVatCollision();
 
-    //            HandleBeeInteractions(gameTime, hasCollisionWithVat, isCollectingHoney);
-    //        }
+        //HandleBeeInteractions(gameTime, hasCollisionWithVat, isCollectingHoney);
+    }
 
     //        /// <summary>
     //        /// Handle the interaction of the bees with other game components.
@@ -879,96 +879,95 @@ public class GameplayScreen : GameScreen
     //            }
     //        }
 
-    //        /// <summary>
-    //        /// Handle the beekeeper's collision with the vat component.
-    //        /// </summary>
-    //        /// <returns>True if the beekeeper collides with the vat and false otherwise.</returns>
-    //        private bool HandleVatCollision()
-    //        {
-    //            if (beeKeeper.Bounds.HasCollision(vat.VatDepositArea))
-    //            {
-    //                if (jar.HasHoney && !beeKeeper.IsStung && !beeKeeper.IsDepositingHoney &&
-    //                    _movementVector == Vector2.Zero)
-    //                {
-    //                    beeKeeper.StartTransferHoney(4, EndHoneyDeposit);
-    //                }
+    /// <summary>
+    /// Handle the beekeeper's collision with the vat component.
+    /// </summary>
+    /// <returns>True if the beekeeper collides with the vat and false otherwise.</returns>
+    private bool HandleVatCollision()
+    {
+        if (_beeKeeper.Bounds.HasCollision(_vat.VatDepositArea))
+        {
+            if (_jar.HasHoney && !_beeKeeper.IsStung && !_beeKeeper.IsDepositingHoney && _movementVector == Vector2.Zero)
+            {
+                _beeKeeper.StartTransferHoney(4, EndHoneyDeposit);
+            }
 
-    //                return true;
-    //            }
+            return true;
+        }
 
-    //            beeKeeper.EndTransferHoney();
-    //            return false;
-    //        }
+        _beeKeeper.EndTransferHoney();
+        return false;
+    }
 
-    //        /// <summary>
-    //        /// Handler for finalizing the honey deposit to the vat.
-    //        /// </summary>
-    //        /// <param name="result"></param>
-    //        public void EndHoneyDeposit(IAsyncResult result)
-    //        {
-    //            int HoneyAmount = jar.DecreaseHoneyByPercent(100);
-    //            vat.IncreaseHoney(HoneyAmount);
-    //            AudioManager.StopSound("DepositingIntoVat_Loop");
-    //        }
+    /// <summary>
+    /// Handler for finalizing the honey deposit to the vat.
+    /// </summary>
+    /// <param name="result"></param>
+    public void EndHoneyDeposit(IAsyncResult result)
+    {
+        int HoneyAmount = _jar.DecreaseHoneyByPercent(100);
+        _vat.IncreaseHoney(HoneyAmount);
+        //AudioManager.StopSound("DepositingIntoVat_Loop");
+    }
 
-    //        /// <summary>
-    //        /// Handle the beekeeper's collision with beehive components.
-    //        /// </summary>
-    //        /// <returns>True if the beekeeper collides with a beehive and false otherwise.</returns>
-    //        /// <remarks>This method is also responsible for allowing bees to regenerate when the beekeeper is not
-    //        /// intersecting with a specific hive.</remarks>
-    //        private bool HandleBeeKeeperBeehiveCollision()
-    //        {
-    //            bool isCollidingWithBeehive = false;
+    /// <summary>
+    /// Handle the beekeeper's collision with beehive components.
+    /// </summary>
+    /// <returns>True if the beekeeper collides with a beehive and false otherwise.</returns>
+    /// <remarks>This method is also responsible for allowing bees to regenerate when the beekeeper is not
+    /// intersecting with a specific hive.</remarks>
+    private bool HandleBeeKeeperBeehiveCollision()
+    {
+        bool isCollidingWithBeehive = false;
 
-    //            Beehive collidedBeehive = null;
+        Beehive collidedBeehive = null;
 
-    //            // Goes over all the beehives
-    //            foreach (Beehive beehive in beehives)
-    //            {
-    //                // If the beekeeper intersects with the beehive
-    //                if (beeKeeper.Bounds.HasCollision(beehive.Bounds))
-    //                {
-    //                    if (_movementVector == Vector2.Zero)
-    //                    {
-    //                        collidedBeehive = beehive;
-    //                        isCollidingWithBeehive = true;
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    beehive.AllowBeesToGenerate = true;
-    //                }
-    //            }
+        // Goes over all the beehives
+        foreach (Beehive beehive in _beehives)
+        {
+            // If the beekeeper intersects with the beehive
+            if (_beeKeeper.Bounds.HasCollision(beehive.Bounds))
+            {
+                if (_movementVector == Vector2.Zero)
+                {
+                    collidedBeehive = beehive;
+                    isCollidingWithBeehive = true;
+                }
+            }
+            else
+            {
+                beehive.AllowBeesToGenerate = true;
+            }
+        }
 
-    //            if (collidedBeehive != null)
-    //            {
-    //                // The beehive has honey, the jar can carry more honey, and the beekeeper is not stung
-    //                if (collidedBeehive.HasHoney && jar.CanCarryMore && !beeKeeper.IsStung)
-    //                {
-    //                    // Take honey from the beehive and put it in the jar
-    //                    collidedBeehive.DecreaseHoney(1);
-    //                    jar.IncreaseHoney(1);
-    //                    beeKeeper.IsCollectingHoney = true;
-    //                    AudioManager.PlaySound("FillingHoneyPot_Loop");
-    //                }
-    //                else
-    //                {
-    //                    beeKeeper.IsCollectingHoney = false;
-    //                }
+        if (collidedBeehive != null)
+        {
+            // The beehive has honey, the jar can carry more honey, and the beekeeper is not stung
+            if (collidedBeehive.HasHoney && _jar.CanCarryMore && !_beeKeeper.IsStung)
+            {
+                // Take honey from the beehive and put it in the jar
+                collidedBeehive.DecreaseHoney(1);
+                _jar.IncreaseHoney(1);
+                _beeKeeper.IsCollectingHoney = true;
+                //AudioManager.PlaySound("FillingHoneyPot_Loop");
+            }
+            else
+            {
+                _beeKeeper.IsCollectingHoney = false;
+            }
 
-    //                // Bees are not allowed to regenerate while the beekeeper is colliding with their beehive
-    //                isCollidingWithBeehive = true;
-    //                collidedBeehive.AllowBeesToGenerate = false;
-    //            }
-    //            else
-    //            {
-    //                beeKeeper.IsCollectingHoney = false;
-    //                AudioManager.StopSound("FillingHoneyPot_Loop");
-    //            }
+            // Bees are not allowed to regenerate while the beekeeper is colliding with their beehive
+            isCollidingWithBeehive = true;
+            collidedBeehive.AllowBeesToGenerate = false;
+        }
+        else
+        {
+            _beeKeeper.IsCollectingHoney = false;
+            //AudioManager.StopSound("FillingHoneyPot_Loop");
+        }
 
-    //            return isCollidingWithBeehive;
-    //        }
+        return isCollidingWithBeehive;
+    }
 
     //        /// <summary>
     //        /// Handle the smoke puff collision with beehive components.

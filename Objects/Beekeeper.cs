@@ -45,13 +45,13 @@ public class BeeKeeper : TexturedDrawableGameComponent
     private bool _isStung;
     //    bool isFlashing;
     //    bool isDrawnLastStungInterval;
-    //    bool isDepositingHoney;
+    private bool _isDepositingHoney;
 
     //    TimeSpan stungTime;
     //    TimeSpan stungDuration;
     //    TimeSpan flashingDuration;
-    //    TimeSpan depositHoneyUpdatingInterval = TimeSpan.FromMilliseconds(200);
-    //    TimeSpan depositHoneyUpdatingTimer = TimeSpan.Zero;
+    private TimeSpan _depositHoneyUpdatingInterval = TimeSpan.FromMilliseconds(200);
+    private TimeSpan _depositHoneyUpdatingTimer = TimeSpan.Zero;
     private TimeSpan _shootSmokePuffTimer = TimeSpan.Zero;
     private readonly TimeSpan _shootSmokePuffTimerInitialValue = TimeSpan.FromMilliseconds(325);
 
@@ -69,11 +69,11 @@ public class BeeKeeper : TexturedDrawableGameComponent
 
     //    int stungDrawingInterval = 5;
     //    int stungDrawingCounter = 0;
-    //    int honeyDepositFrameCount;
-    //    int depositHoneyTimerCounter = -1;
+    private int _honeyDepositFrameCount;
+    private int _depositHoneyTimerCounter = -1;
     private int _collectingHoneyFrameCounter;
 
-    //    AsyncCallback depositHoneyCallback;
+    private AsyncCallback _depositHoneyCallback;
 
     private WalkingDirection _newDirection = WalkingDirection.Up;
     private WalkingDirection _direction = WalkingDirection.Up;
@@ -148,13 +148,13 @@ public class BeeKeeper : TexturedDrawableGameComponent
     //        }
     //    }
 
-    //    public bool IsDepositingHoney
-    //    {
-    //        get
-    //        {
-    //            return isDepositingHoney;
-    //        }
-    //    }
+    public bool IsDepositingHoney
+    {
+        get
+        {
+            return _isDepositingHoney;
+        }
+    }
 
     public bool IsCollectingHoney { get; set; }
 
@@ -245,15 +245,15 @@ public class BeeKeeper : TexturedDrawableGameComponent
         //        }
 
 
-        //        if (isDepositingHoney)
-        //        {
-        //            if (depositHoneyUpdatingTimer == TimeSpan.Zero)
-        //            {
-        //                depositHoneyUpdatingTimer = gameTime.TotalGameTime;
-        //            }
+        if (_isDepositingHoney)
+        {
+            if (_depositHoneyUpdatingTimer == TimeSpan.Zero)
+            {
+                _depositHoneyUpdatingTimer = gameTime.TotalGameTime;
+            }
 
-        //            AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].Update(gameTime, true);
-        //        }
+            AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].Update(gameTime, true);
+        }
 
         // The oldest smoke puff might have expired and should therefore be recycled
         if ((FiredSmokePuffs.Count > 0) && (FiredSmokePuffs.Peek().IsGone))
@@ -346,37 +346,35 @@ public class BeeKeeper : TexturedDrawableGameComponent
         //        }
 
 
-        //        if (isDepositingHoney)
-        //        {
-        //            if (_velocity != Vector2.Zero)
-        //            {
-        //                isDepositingHoney = false;
-        //                AudioManager.StopSound("DepositingIntoVat_Loop");
-        //            }
+        if (_isDepositingHoney)
+        {
+            if (_velocity != Vector2.Zero)
+            {
+                _isDepositingHoney = false;
+                //AudioManager.StopSound("DepositingIntoVat_Loop");
+            }
 
-        //            // We want the deposit duration to sync with the deposit  
-        //            // animation
-        //            // So we manage the timing ourselves
-        //            if (depositHoneyUpdatingTimer != TimeSpan.Zero &&
-        //                depositHoneyUpdatingTimer + depositHoneyUpdatingInterval < gameTime.TotalGameTime)
-        //            {
-        //                depositHoneyTimerCounter++;
-        //                depositHoneyUpdatingTimer = TimeSpan.Zero;
-        //            }
+            // We want the deposit duration to sync with the deposit  
+            // animation
+            // So we manage the timing ourselves
+            if (_depositHoneyUpdatingTimer != TimeSpan.Zero && _depositHoneyUpdatingTimer + _depositHoneyUpdatingInterval < gameTime.TotalGameTime)
+            {
+                _depositHoneyTimerCounter++;
+                _depositHoneyUpdatingTimer = TimeSpan.Zero;
+            }
 
-        //            AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].Draw(scaledSpriteBatch, position,
-        //                SpriteEffects.None);
+            AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].Draw(_spriteBatch, _position, SpriteEffects.None);
 
-        //            if (depositHoneyTimerCounter == honeyDepositFrameCount - 1)
-        //            {
-        //                isDepositingHoney = false;
-        //                depositHoneyCallback.Invoke(null);
-        //                AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].PlayFromFrameIndex(0);
-        //            }
+            if (_depositHoneyTimerCounter == _honeyDepositFrameCount - 1)
+            {
+                _isDepositingHoney = false;
+                _depositHoneyCallback.Invoke(null);
+                AnimationDefinitions[BeekeeperDepositingHoneyAnimationKey].PlayFromFrameIndex(0);
+            }
 
-        //            scaledSpriteBatch.End();
-        //            return;
-        //        }
+            _spriteBatch.End();
+            return;
+        }
 
         bool hadDirectionChanged = false;
 
@@ -501,37 +499,29 @@ public class BeeKeeper : TexturedDrawableGameComponent
         _currentEffect = GetSpriteEffect(movementDirection);
     }
 
-    //    /// <summary>
-    //    /// Starts the process of transferring honey to the honey vat.
-    //    /// </summary>
-    //    /// <param name="honeyDepositFrameCount">The amount of frames in the honey
-    //    /// depositing animation.</param>
-    //    /// <param name="callback">Callback to invoke once the process is 
-    //    /// complete.</param>
-    //    public void StartTransferHoney(int honeyDepositFrameCount, AsyncCallback callback)
-    //    {
-    //        depositHoneyCallback = callback;
-    //        this.honeyDepositFrameCount = honeyDepositFrameCount;
-    //        isDepositingHoney = true;
-    //        depositHoneyTimerCounter = 0;
+    /// <summary>
+    /// Starts the process of transferring honey to the honey vat.
+    /// </summary>
+    /// <param name="honeyDepositFrameCount">The amount of frames in the honey depositing animation.</param>
+    /// <param name="callback">Callback to invoke once the process is complete.</param>
+    public void StartTransferHoney(int honeyDepositFrameCount, AsyncCallback callback)
+    {
+        _depositHoneyCallback = callback;
+        _honeyDepositFrameCount = honeyDepositFrameCount;
+        _isDepositingHoney = true;
+        _depositHoneyTimerCounter = 0;
 
 
-    //        AudioManager.PlaySound("DepositingIntoVat_Loop");
-    //    }
+        //AudioManager.PlaySound("DepositingIntoVat_Loop");
+    }
 
-    //    /// <summary>
-    //    /// Marks the honey transfer process as complete.
-    //    /// </summary>
-    //    public void EndTransferHoney()
-    //    {
-    //        isDepositingHoney = false;
-    //    }
-
-
-    //    #endregion
-
-    //    #region Private Methods
-
+    /// <summary>
+    /// Marks the honey transfer process as complete.
+    /// </summary>
+    public void EndTransferHoney()
+    {
+        _isDepositingHoney = false;
+    }
 
     /// <summary>
     /// Shoots a puff of smoke. If too many puffs of smoke have already been fired, the oldest one vanishes and

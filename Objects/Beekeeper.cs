@@ -158,10 +158,10 @@ public class BeeKeeper : TexturedDrawableGameComponent
 
     public bool IsCollectingHoney { get; set; }
 
-    //    public Vector2 Position
-    //    {
-    //        get { return position; }
-    //    }
+    public Vector2 Position
+    {
+        get { return _position; }
+    }
 
     //    public Rectangle ThumbStickArea { get; set; }
 

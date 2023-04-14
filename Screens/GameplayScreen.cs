@@ -307,24 +307,24 @@ public class GameplayScreen : GameScreen
 
         HandleCollision(gameTime);
 
-        //            HandleVatHoneyArrow();
+        HandleVatHoneyArrow();
 
-        //            beeKeeper.DrawOrder = 1;
-        //            int beeKeeperY = (int)(beeKeeper.Position.Y + beeKeeper.Bounds.Height - 2);
+        _beeKeeper.DrawOrder = 1;
+        int beeKeeperY = (int)(_beeKeeper.Position.Y + _beeKeeper.Bounds.Height - 2);
 
-        //            // We want to determine the draw order of the beekeeper,
-        //            // if the beekeeper is under half the height of the beehive 
-        //            // it should be drawn over the beehive.
-        //            foreach (Beehive beehive in beehives)
-        //            {
-        //                if (beeKeeperY > beehive.Bounds.Y)
-        //                {
-        //                    if (beehive.Bounds.Y + beehive.Bounds.Height / 2 < beeKeeperY)
-        //                    {
-        //                        beeKeeper.DrawOrder = Math.Max(beeKeeper.DrawOrder, beehive.Bounds.Y + 1);
-        //                    }
-        //                }
-        //            }
+        // We want to determine the draw order of the beekeeper,
+        // if the beekeeper is under half the height of the beehive 
+        // it should be drawn over the beehive.
+        foreach (Beehive beehive in _beehives)
+        {
+            if (beeKeeperY > beehive.Bounds.Y)
+            {
+                if (beehive.Bounds.Y + beehive.Bounds.Height / 2 < beeKeeperY)
+                {
+                    _beeKeeper.DrawOrder = Math.Max(_beeKeeper.DrawOrder, beehive.Bounds.Y + 1);
+                }
+            }
+        }
 
         //            if (_gameElapsed.Minutes == 0 && _gameElapsed.Seconds == 10)
         //            {
@@ -985,20 +985,20 @@ public class GameplayScreen : GameScreen
         }
     }
 
-    //        /// <summary>
-    //        /// Sets an internal value which determines whether or not to display an arrow above the vat.
-    //        /// </summary>
-    //        private void HandleVatHoneyArrow()
-    //        {
-    //            if (jar.HasHoney)
-    //            {
-    //                drawArrow = true;
-    //            }
-    //            else
-    //            {
-    //                drawArrow = false;
-    //            }
-    //        }
+    /// <summary>
+    /// Sets an internal value which determines whether or not to display an arrow above the vat.
+    /// </summary>
+    private void HandleVatHoneyArrow()
+    {
+        if (_jar.HasHoney)
+        {
+            _drawArrow = true;
+        }
+        else
+        {
+            _drawArrow = false;
+        }
+    }
 
     /// <summary>
     /// Handle smoke logic.

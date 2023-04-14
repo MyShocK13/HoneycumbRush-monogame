@@ -189,10 +189,10 @@ public class GameplayScreen : GameScreen
                 throw new ArgumentNullException("input");
             }
 
-            //if (input.IsPauseGame(null))
-            //{
-            //    PauseCurrentGame();
-            //}
+            if (input.IsPauseGame(null))
+            {
+                PauseCurrentGame();
+            }
         }
 
         _isSmokebuttonClicked = false;
@@ -371,12 +371,6 @@ public class GameplayScreen : GameScreen
         base.Draw(gameTime);
     }
 
-
-    //        #endregion
-
-    //        #region Private Methods
-
-
     //        /// <summary>
     //        /// If the level is over, draws text describing the level's outcome.
     //        /// </summary>
@@ -443,22 +437,22 @@ public class GameplayScreen : GameScreen
     //            AudioManager.StopSound("BeeBuzzing_Loop");
     //        }
 
-    //        /// <summary>
-    //        /// Pause the game.
-    //        /// </summary>
-    //        private void PauseCurrentGame()
-    //        {
-    //            debugSystem.FpsCounter.Visible = false;
-    //            debugSystem.TimeRuler.Visible = false;
-    //            debugSystem.TimeRuler.ShowLog = false;
+    /// <summary>
+    /// Pause the game.
+    /// </summary>
+    private void PauseCurrentGame()
+    {
+        //debugSystem.FpsCounter.Visible = false;
+        //debugSystem.TimeRuler.Visible = false;
+        //debugSystem.TimeRuler.ShowLog = false;
 
-    //            // Pause sounds
-    //            AudioManager.PauseResumeSounds(false);
+        //// Pause sounds
+        //AudioManager.PauseResumeSounds(false);
 
-    //            // Set pause screen
-    //            ScreenManager.AddScreen(new BackgroundScreen("pauseBackground"), null);
-    //            ScreenManager.AddScreen(new PauseScreen(), null);
-    //        }
+        // Set pause screen
+        ScreenManager.AddScreen(new BackgroundScreen("pauseBackground"), null);
+        ScreenManager.AddScreen(new PauseScreen(), null);
+    }
 
     /// <summary>
     /// Loads animation settings from an xml file.
@@ -587,9 +581,7 @@ public class GameplayScreen : GameScreen
         _vat = new Vat(ScreenManager.Game, this, vatTexture, vatLocation, scoreBar);
         ScreenManager.Game.Components.Add(_vat);
 
-        _vatArrowPosition = vatLocation + new Vector2(
-            vatTexture.Width / 2 - _arrowTexture.Width / 2,
-            UIConstants.VatArrowOffset);
+        _vatArrowPosition = vatLocation + new Vector2(vatTexture.Width / 2 - _arrowTexture.Width / 2, UIConstants.VatArrowOffset);
 
         ScreenManager.Game.Components.Add(scoreBar);
         scoreBar.DrawOrder = _vat.DrawOrder + 1;

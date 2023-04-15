@@ -46,30 +46,15 @@ public class GameplayScreen : GameScreen
     private bool _drawArrowInInterval;
     private bool _isSmokebuttonClicked;
     private bool _isInMotion;
+    private bool _isLevelEnd;
+    private bool _isUserWon;
+    private bool _userInputToExit;
     private int _arrowCounter;
 
     private int _amountOfSoldierBee;
     private int _amountOfWorkerBee;
     private TimeSpan _gameElapsed;
     private TimeSpan _startScreenTime;
-
-
-
-    //        Vector2 controlstickStartupPosition;
-    //        Vector2 controlstickBoundaryPosition;
-    //        Vector2 lastTouchPosition;
-
-    //        bool isLevelEnd;
-    //        bool isUserWon;
-    //        bool userInputToExit;
-
-
-
-
-
-
-
-
 
     public bool IsStarted
     {
@@ -99,7 +84,7 @@ public class GameplayScreen : GameScreen
     //        bool showDebugInfo = false;
     //        Rectangle deviceUpperRightCorner = new Rectangle(750, 0, 50, 50);
 
-    //        public static int FinalScore;
+    public static int FinalScore;
 
     public GameplayScreen(DifficultyMode gameDifficultyMode)
     {
@@ -128,7 +113,7 @@ public class GameplayScreen : GameScreen
 
         IsInMotion = false;
         _isAtStartupCountDown = true;
-        //            isLevelEnd = false;
+        _isLevelEnd = false;
 
         //            EnabledGestures = GestureType.Tap;
     }
@@ -199,58 +184,19 @@ public class GameplayScreen : GameScreen
 
         PlayerIndex player;
 
-        //            VirtualThumbsticks.Update(input);
-
-        //            if (input.Gestures.Count > 0)
-        //            {
-        //                GestureSample topGesture = input.Gestures[0];
-
-        //                if (topGesture.GestureType == GestureType.Tap &&
-        //                    deviceUpperRightCorner.Contains(new Point((int)topGesture.Position.X, (int)topGesture.Position.Y)))
-        //                {
-        //                    showDebugInfo = !showDebugInfo;
-        //                }
-        //            }
-
-        //            if (isLevelEnd)
-        //            {
-        //                if (input.Gestures.Count > 0)
-        //                {
-        //                    if (input.Gestures[0].GestureType == GestureType.Tap)
-        //                    {
-        //                        userInputToExit = true;
-        //                    }
-        //                }
-
-        //                if (input.IsNewKeyPress(Keys.Enter, ControllingPlayer, out player) ||
-        //                    input.IsNewKeyPress(Keys.Space, ControllingPlayer, out player))
-        //                {
-        //                    userInputToExit = true;
-        //                }
-        //            }
+        if (_isLevelEnd)
+        {
+            if (input.IsNewKeyPress(Keys.Enter, ControllingPlayer, out player) ||
+                input.IsNewKeyPress(Keys.Space, ControllingPlayer, out player))
+            {
+                _userInputToExit = true;
+            }
+        }
 
         if (!IsStarted)
         {
             return;
         }
-
-        //            // If there was any touch
-        //            if (VirtualThumbsticks.RightThumbstickCenter.HasValue)
-        //            {
-        //                // Button Bounds
-        //                Rectangle buttonRectangle = new Rectangle((int)smokeButtonPosition.X, (int)smokeButtonPosition.Y,
-        //                                                            smokeButton.Width / 2, smokeButton.Height);
-
-        //                // Touch Bounds
-        //                Rectangle touchRectangle = new Rectangle((int)VirtualThumbsticks.RightThumbstickCenter.Value.X,
-        //                                                        (int)VirtualThumbsticks.RightThumbstickCenter.Value.Y,
-        //                                                        1, 1);
-        //                // If the touch is in the button
-        //                if (buttonRectangle.Contains(touchRectangle) && !beeKeeper.IsCollectingHoney && !beeKeeper.IsStung)
-        //                {
-        //                    _isSmokebuttonClicked = true;
-        //                }
-        //            }
 
         // Handle keyboard
         //            if (input.IsNewKeyPress(Keys.Y, ControllingPlayer, out player))
@@ -278,13 +224,13 @@ public class GameplayScreen : GameScreen
             _startScreenTime -= gameTime.ElapsedGameTime;
         }
 
-        //            // Check for and handle a game over
-        //            if (CheckIfCurrentGameFinished())
-        //            {
-        //                base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        // Check for and handle a game over
+        if (CheckIfCurrentGameFinished())
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-        //                return;
-        //            }
+            return;
+        }
 
         if (!(IsActive && IsStarted))
         {
@@ -298,10 +244,6 @@ public class GameplayScreen : GameScreen
         //            debugSystem.TimeRuler.ShowLog = showDebugInfo;
 
         _gameElapsed -= gameTime.ElapsedGameTime;
-
-        //#if WINDOWS_PHONE
-        //            HandleThumbStick();
-        //#endif
 
         HandleSmoke();
 
@@ -364,78 +306,78 @@ public class GameplayScreen : GameScreen
             DrawVatHoneyArrow();
         }
 
-        //            DrawLevelEndIfNecessary();
+        DrawLevelEndIfNecessary();
 
         spriteBatch.End();
 
         base.Draw(gameTime);
     }
 
-    //        /// <summary>
-    //        /// If the level is over, draws text describing the level's outcome.
-    //        /// </summary>
-    //        private void DrawLevelEndIfNecessary()
-    //        {
-    //            if (isLevelEnd)
-    //            {
-    //                string stringToDisplay = string.Empty;
+    /// <summary>
+    /// If the level is over, draws text describing the level's outcome.
+    /// </summary>
+    private void DrawLevelEndIfNecessary()
+    {
+        if (_isLevelEnd)
+        {
+            string stringToDisplay = string.Empty;
 
-    //                if (isUserWon)
-    //                {
-    //                    if (FinalScore != 0 && HighScoreScreen.IsInHighscores(FinalScore))
-    //                    {
-    //                        stringToDisplay = "It's a new\nHigh-Score!";
-    //                    }
-    //                    else
-    //                    {
-    //                        stringToDisplay = "You Win!";
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    stringToDisplay = "Time Is Up!";
-    //                }
+            if (_isUserWon)
+            {
+                //if (FinalScore != 0 && HighScoreScreen.IsInHighscores(FinalScore))
+                //{
+                //    stringToDisplay = "It's a new\nHigh-Score!";
+                //}
+                //else
+                //{
+                    stringToDisplay = "You Win!";
+                //}
+            }
+            else
+            {
+                stringToDisplay = "Time Is Up!";
+            }
 
-    //                Vector2 stringVector = font36px.MeasureString(stringToDisplay) * ScreenManager.SpriteBatch.ScaleVector;
+            Vector2 stringVector = _font36px.MeasureString(stringToDisplay);
 
-    //                ScreenManager.SpriteBatch.DrawString(font36px, stringToDisplay,
-    //                                new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - stringVector.X / 2,
-    //                                            ScreenManager.GraphicsDevice.Viewport.Height / 2 - stringVector.Y / 2),
-    //                                Color.White);
-    //            }
-    //        }
+            ScreenManager.SpriteBatch.DrawString(_font36px, stringToDisplay,
+                            new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - stringVector.X / 2,
+                                        ScreenManager.GraphicsDevice.Viewport.Height / 2 - stringVector.Y / 2),
+                            Color.White);
+        }
+    }
 
-    //        /// <summary>
-    //        /// Advances to the next screen based on the current difficulty and whether or not the user has won.
-    //        /// </summary>
-    //        /// <param name="isWon">Whether or not the user has won the current level.</param>
-    //        private void MoveToNextScreen(bool isWon)
-    //        {
-    //            ScreenManager.AddScreen(new BackgroundScreen("pauseBackground"), null);
+    /// <summary>
+    /// Advances to the next screen based on the current difficulty and whether or not the user has won.
+    /// </summary>
+    /// <param name="isWon">Whether or not the user has won the current level.</param>
+    private void MoveToNextScreen(bool isWon)
+    {
+        ScreenManager.AddScreen(new BackgroundScreen("pauseBackground"), null);
 
-    //            if (isWon)
-    //            {
-    //                switch (gameDifficultyLevel)
-    //                {
-    //                    case DifficultyMode.Easy:
-    //                    case DifficultyMode.Medium:
-    //                        ScreenManager.AddScreen(
-    //                                new LevelOverScreen("You Finished Level: " + gameDifficultyLevel.ToString(),
-    //                                    ++gameDifficultyLevel), null);
-    //                        break;
-    //                    case DifficultyMode.Hard:
-    //                        ScreenManager.AddScreen(new LevelOverScreen("You Win", null), null);
-    //                        break;
-    //                }
-    //            }
-    //            else
-    //            {
-    //                ScreenManager.AddScreen(new LevelOverScreen("You Lose", null), null);
-    //            }
+        if (isWon)
+        {
+            switch (_gameDifficultyLevel)
+            {
+                case DifficultyMode.Easy:
+                case DifficultyMode.Medium:
+                    ScreenManager.AddScreen(
+                            new LevelOverScreen("You Finished Level: " + _gameDifficultyLevel.ToString(),
+                                ++_gameDifficultyLevel), null);
+                    break;
+                case DifficultyMode.Hard:
+                    ScreenManager.AddScreen(new LevelOverScreen("You Win", null), null);
+                    break;
+            }
+        }
+        else
+        {
+            ScreenManager.AddScreen(new LevelOverScreen("You Lose", null), null);
+        }
 
-    //            AudioManager.StopMusic();
-    //            AudioManager.StopSound("BeeBuzzing_Loop");
-    //        }
+        //AudioManager.StopMusic();
+        //AudioManager.StopSound("BeeBuzzing_Loop");
+    }
 
     /// <summary>
     /// Pause the game.
@@ -517,8 +459,6 @@ public class GameplayScreen : GameScreen
     /// </summary>
     private void CreateGameComponents()
     {
-        Debug.WriteLine("Create Game Components");
-
         Rectangle safeArea = SafeArea;
 
         Texture2D jarTexture = ScreenManager.Game.Content.Load<Texture2D>("Textures/honeyJar");
@@ -561,8 +501,6 @@ public class GameplayScreen : GameScreen
         // Creates the BeeKeeper
         _beeKeeper = new BeeKeeper(ScreenManager.Game, this);
         _beeKeeper.AnimationDefinitions = _animations;
-        //            beeKeeper.ThumbStickArea = new Rectangle((int)controlstickBoundaryPosition.X,
-        //                        (int)controlstickBoundaryPosition.Y, controlstickBoundary.Width, controlstickBoundary.Height);
         ScreenManager.Game.Components.Add(_beeKeeper);
 
         // Creates the vat
@@ -667,41 +605,6 @@ public class GameplayScreen : GameScreen
         _controlstick = ScreenManager.Game.Content.Load<Texture2D>("Textures/controlstick");
     }
 
-    //#if WINDOWS_PHONE
-    //        /// <summary>
-    //        /// Handle ThumbStick logic
-    //        /// </summary>
-    //        private void HandleThumbStick()
-    //        {
-    //            // Calculate the rectangle of the outer circle of the thumbstick
-    //            Rectangle outerControlstick = new Rectangle(0, (int)controlstickBoundaryPosition.Y - 35,
-    //                controlstickBoundary.Width + 60, controlstickBoundary.Height + 60);
-
-    //            // Reset the thumbstick position when it is idle
-    //            if (VirtualThumbsticks.LeftThumbstick == Vector2.Zero)
-    //            {
-    //                IsInMotion = false;
-    //                controlstickStartupPosition = new Vector2(55, 369);
-    //            }
-    //            else
-    //            {
-    //                // If not in motion and the touch point is not in the control bounds - there is no movement
-    //                Rectangle touchRectangle = new Rectangle((int)lastTouchPosition.X, (int)lastTouchPosition.Y, 1, 1);
-
-    //                if (!outerControlstick.Contains(touchRectangle))
-    //                {
-    //                    controlstickStartupPosition = new Vector2(55, 369);
-    //                    IsInMotion = false;
-    //                    return;
-    //                }
-
-    //                // Moves the thumbstick's inner circle
-    //                float radius = controlstick.Width / 2 + 35;
-    //                controlstickStartupPosition = new Vector2(55, 369) + (VirtualThumbsticks.LeftThumbstick * radius);
-    //            }
-    //        }
-    //#endif
-
     /// <summary>
     /// Moves the beekeeper.
     /// </summary>
@@ -714,7 +617,6 @@ public class GameplayScreen : GameScreen
 
         PlayerIndex playerIndex;
 
-        //Vector2 leftThumbstick = VirtualThumbsticks.LeftThumbstick;
         Vector2 leftThumbstick = Vector2.Zero;
 
         // Move on to keyboard input if we still have nothing
@@ -1022,55 +924,55 @@ public class GameplayScreen : GameScreen
         }
     }
 
-    //        /// <summary>
-    //        /// Checks whether the current game is over, and if so performs the necessary actions.
-    //        /// </summary>
-    //        /// <returns>True if the current game is over and false otherwise.</returns>
-    //        private bool CheckIfCurrentGameFinished()
-    //        {
-    //            levelEnded = false;
-    //            isUserWon = vat.CurrentVatCapacity >= vat.MaxVatCapacity;
+    /// <summary>
+    /// Checks whether the current game is over, and if so performs the necessary actions.
+    /// </summary>
+    /// <returns>True if the current game is over and false otherwise.</returns>
+    private bool CheckIfCurrentGameFinished()
+    {
+        _levelEnded = false;
+        _isUserWon = _vat.CurrentVatCapacity >= _vat.MaxVatCapacity;
 
-    //            // If the vat is full, the player wins
-    //            if (isUserWon || _gameElapsed <= TimeSpan.Zero)
-    //            {
-    //                levelEnded = true;
+        // If the vat is full, the player wins
+        if (_isUserWon || _gameElapsed <= TimeSpan.Zero)
+        {
+            _levelEnded = true;
 
-    //                if (gameDifficultyLevel == DifficultyMode.Hard)
-    //                {
-    //                    FinalScore = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].HighScoreFactor
-    //                        * (int)_gameElapsed.TotalMilliseconds;
-    //                }
-    //                else
-    //                {
-    //                    FinalScore = 0;
-    //                }
-    //            }
+            //if (_gameDifficultyLevel == DifficultyMode.Hard)
+            //{
+            //    FinalScore = ConfigurationManager.ModesConfiguration[gameDifficultyLevel].HighScoreFactor
+            //        * (int)_gameElapsed.TotalMilliseconds;
+            //}
+            //else
+            //{
+                FinalScore = 0;
+            //}
+        }
 
-    //            // if true, game is over
-    //            if (_gameElapsed <= TimeSpan.Zero || levelEnded)
-    //            {
-    //                isLevelEnd = true;
+        // if true, game is over
+        if (_gameElapsed <= TimeSpan.Zero || _levelEnded)
+        {
+            _isLevelEnd = true;
 
-    //                if (userInputToExit)
-    //                {
-    //                    ScreenManager.RemoveScreen(this);
+            if (_userInputToExit)
+            {
+                ScreenManager.RemoveScreen(this);
 
-    //                    if (isUserWon) // True - the user won
-    //                    {
-    //                        AudioManager.PlaySound("Victory");
-    //                    }
-    //                    else
-    //                    {
-    //                        AudioManager.PlaySound("Defeat");
-    //                    }
+                //if (_isUserWon) // True - the user won
+                //{
+                //    AudioManager.PlaySound("Victory");
+                //}
+                //else
+                //{
+                //    AudioManager.PlaySound("Defeat");
+                //}
 
-    //                    MoveToNextScreen(isUserWon);
-    //                }
-    //            }
+                MoveToNextScreen(_isUserWon);
+            }
+        }
 
-    //            return false;
-    //        }
+        return false;
+    }
 
     /// <summary>
     /// Draws the arrow in intervals of 20 game update loops.        

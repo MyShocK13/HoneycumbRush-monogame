@@ -163,8 +163,6 @@ public class BeeKeeper : TexturedDrawableGameComponent
         get { return _position; }
     }
 
-    //    public Rectangle ThumbStickArea { get; set; }
-
     public bool IsInMotion { get; set; }
 
     /// <summary>

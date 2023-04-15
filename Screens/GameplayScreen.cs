@@ -107,15 +107,11 @@ public class GameplayScreen : GameScreen
         _amountOfSoldierBee = 4;
         _amountOfWorkerBee = 16;
 
-        //            controlstickBoundaryPosition = new Vector2(34, 347);
         _smokeButtonPosition = new Vector2(664, 346);
-        //            controlstickStartupPosition = new Vector2(55, 369);
 
         IsInMotion = false;
         _isAtStartupCountDown = true;
         _isLevelEnd = false;
-
-        //            EnabledGestures = GestureType.Tap;
     }
 
     public override void LoadContent()
@@ -136,30 +132,24 @@ public class GameplayScreen : GameScreen
         CreateGameComponents();
     }
 
-    //        /// <summary>
-    //        /// Unloads game components which are no longer needed once the game ends.
-    //        /// </summary>
-    //        public override void UnloadContent()
-    //        {
-    //            var componentList = ScreenManager.Game.Components;
+    /// <summary>
+    /// Unloads game components which are no longer needed once the game ends.
+    /// </summary>
+    public override void UnloadContent()
+    {
+        var componentList = ScreenManager.Game.Components;
 
-    //            for (int index = 0; index < componentList.Count; index++)
-    //            {
-    //                if (componentList[index] is TexturedDrawableGameComponent || componentList[index] is ScoreBar)
-    //                {
-    //                    componentList.RemoveAt(index);
-    //                    index--;
-    //                }
-    //            }
+        for (int index = 0; index < componentList.Count; index++)
+        {
+            if (componentList[index] is TexturedDrawableGameComponent || componentList[index] is ScoreBar)
+            {
+                componentList.RemoveAt(index);
+                index--;
+            }
+        }
 
-    //            base.UnloadContent();
-    //        }
-
-
-    //        #endregion
-
-    //        #region Update
-
+        base.UnloadContent();
+    }
 
     /// <summary>
     /// Handle the player's input.
